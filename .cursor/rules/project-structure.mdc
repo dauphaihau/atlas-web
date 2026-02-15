@@ -1,0 +1,36 @@
+---
+description: Follow project structure from docs/project-structure.md (Feature-Sliced Design)
+alwaysApply: true
+---
+
+# Project Structure (FSD)
+
+Follow **docs/project-structure.md** for all code in this repo. Summary:
+
+## Layout under `src/`
+
+- **features/** – Self-contained business features (components/, hooks/, *.store.ts, constants). One feature per folder (e.g. asset-editor, game-preview, game-settings, text-to-game, user-flow).
+- **pages/** – Route-level components; compose features/widgets; minimal logic.
+- **shared/** – Cross-feature only (api/, hooks/, lib/, ui/, queries/, utils/). API + DTOs in shared/api; server state in shared/queries; shared UI in shared/ui.
+- **widgets/** – Reusable UI building blocks (e.g. Gizmo, Panel).
+- **domain/** – Business rules and validators only (e.g. domain/game-setting/validators.ts).
+
+## Dependency direction
+
+```
+pages → features → widgets → shared
+  ↓
+domain (no outward deps)
+```
+
+- Put new code in the correct layer; don’t let features depend on pages or domain depend on app layers.
+- Server state: React Query in **shared/queries/**.
+- Client/draft state: Zustand in feature-level **\*.store.ts**.
+
+## Conventions
+
+- Shared code used by 2+ features → **shared/**.
+- Icons used in 2+ features → **shared/ui/icons/** (export via shared/ui).
+- New feature: mirror existing feature folders (components/, hooks/, *.store.ts, constants).
+
+Reference **docs/project-structure.md** for full structure, examples, and migration notes.
