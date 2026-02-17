@@ -30,6 +30,22 @@ export interface ApiRequestOptions extends RequestInit {
   skipAuth?: boolean
 }
 
+/**
+ * Backend success response wrapper (ApiResponse::ok/created/accepted).
+ * Unwrap with unwrapData() or .data in the API layer for single-resource endpoints.
+ */
+export interface ApiResponseWrapper<T, M = unknown> {
+  data: T
+  message?: string
+  meta?: M
+}
+
+/** Unwrap backend { data } response; throws if missing. */
+export function unwrapData<T>(res: ApiResponseWrapper<T> | null): T {
+  if (res?.data == null) throw new Error("Unexpected API response: missing data")
+  return res.data
+}
+
 function buildHeaders(init: RequestInit, body: string | FormData | undefined): Headers {
   const headers = new Headers(init.headers)
   if (!headers.has("Accept")) {
