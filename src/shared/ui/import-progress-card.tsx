@@ -3,17 +3,24 @@
 import { useEffect } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { FileText, X } from "lucide-react"
-import { userApi, userKeys } from "@/shared/api/user"
+import {
+  userApi,
+  userKeys,
+  importStatusFromProgress,
+  importStatusFromCompleted,
+} from "@/shared/api/user"
 import { useImportProgressStore } from "@/shared/store/import-progress.store"
 import { formatFileSize } from "@/shared/utils/format-file-size"
 import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/ui/button"
 import { Progress } from "@/shared/ui/progress"
+import { isEchoConfigured, subscribeToImport } from "@/shared/lib/echo"
 
 export function ImportProgressCard() {
   const activeImport = useImportProgressStore((s) => s.activeImport)
   const clearActiveImport = useImportProgressStore((s) => s.clearActiveImport)
   const queryClient = useQueryClient()
+  const echoConfigured = isEchoConfigured()
 
   const {
     data: status,
@@ -25,11 +32,36 @@ export function ImportProgressCard() {
     queryKey: userKeys.importStatus(activeImport?.id ?? 0),
     queryFn: () => userApi.getImportStatus(activeImport!.id),
     enabled: activeImport != null,
-    refetchInterval: (query) => {
-      const s = query.state.data?.status
-      return s === "pending" || s === "processing" ? 2000 : false
-    },
+    // When Echo is configured, progress comes via WebSockets; otherwise fall back to polling
+    refetchInterval: echoConfigured
+      ? false
+      : (query) => {
+          const s = query.state.data?.status
+          return s === "pending" || s === "processing" ? 2000 : false
+        },
   })
+
+  // Subscribe to WebSocket for real-time progress when Echo is configured
+  useEffect(() => {
+    if (activeImport == null || !echoConfigured) return
+    const importId = activeImport.id
+    const unsubscribe = subscribeToImport(importId, {
+      onProgress: (payload) => {
+        queryClient.setQueryData(
+          userKeys.importStatus(importId),
+          importStatusFromProgress(importId, payload)
+        )
+      },
+      onCompleted: (payload) => {
+        queryClient.setQueryData(
+          userKeys.importStatus(importId),
+          importStatusFromCompleted(importId, payload)
+        )
+        queryClient.invalidateQueries({ queryKey: userKeys.all })
+      },
+    })
+    return unsubscribe
+  }, [activeImport, echoConfigured, queryClient])
 
   useEffect(() => {
     if (status?.status === "completed") {
