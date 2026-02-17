@@ -7,7 +7,7 @@ import type {
   ListUsersResponseDto,
   UserDto,
 } from "./dto"
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponseWrapper, unwrapData } from "@/shared/lib/api-client"
 
 function buildListUsersUrl(params?: ListUsersParams): string {
   const base = "/api/v1/users"
@@ -26,33 +26,45 @@ export const userApi = {
   },
 
   create(payload: CreateUserRequestDto): Promise<UserDto> {
-    return api.post<UserDto>("/api/v1/users", payload)
+    return api
+      .post<ApiResponseWrapper<UserDto>>("/api/v1/users", payload)
+      .then(unwrapData)
   },
 
   importUsers(file: File): Promise<ImportUsersResponseDto> {
     const formData = new FormData()
     formData.append("file", file)
-    return api.post<ImportUsersResponseDto>("/api/v1/users/import", formData)
+    return api
+      .post<ApiResponseWrapper<ImportUsersResponseDto>>("/api/v1/users/import", formData)
+      .then(unwrapData)
   },
 
   getImportStatus(id: number): Promise<ImportStatusDto> {
-    return api.get<ImportStatusDto>(`/api/v1/users/import/${id}/status`)
+    return api
+      .get<ApiResponseWrapper<ImportStatusDto>>(`/api/v1/users/import/${id}/status`)
+      .then(unwrapData)
   },
 
   updateMyAvatar(file: File): Promise<UserDto> {
     const formData = new FormData()
     formData.append("avatar", file)
-    return api.post<UserDto>("/api/v1/me/avatar", formData)
+    return api
+      .post<ApiResponseWrapper<UserDto>>("/api/v1/me/avatar", formData)
+      .then(unwrapData)
   },
 
   updateUserAvatar(userId: number, file: File): Promise<UserDto> {
     const formData = new FormData()
     formData.append("avatar", file)
-    return api.post<UserDto>(`/api/v1/users/${userId}/avatar`, formData)
+    return api
+      .post<ApiResponseWrapper<UserDto>>(`/api/v1/users/${userId}/avatar`, formData)
+      .then(unwrapData)
   },
 
   /** Request users CSV export; returns signed download URL. */
   exportUsers(): Promise<ExportUsersResponseDto> {
-    return api.get<ExportUsersResponseDto>("/api/v1/users/export")
+    return api
+      .get<ApiResponseWrapper<ExportUsersResponseDto>>("/api/v1/users/export")
+      .then(unwrapData)
   },
 }
