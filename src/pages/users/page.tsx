@@ -1,7 +1,7 @@
 import { Button } from "@/shared/ui/button"
 import { useExportUsersMutation } from "@/shared/queries/user"
 import { Download } from "lucide-react"
-import { AddUserSheet } from "./components/AddUserSheet"
+import { AddUserDialog } from "./components/AddUserDialog"
 import { ImportUsersSheet } from "./components/ImportUsersSheet"
 import { UsersTable } from "./components/UsersTable"
 
@@ -34,7 +34,7 @@ export function UsersPage() {
             <Download className="size-4" />
             {exportUsers.isPending ? "Exporting…" : "Export CSV"}
           </Button>
-          <AddUserSheet />
+          <AddUserDialog />
           <ImportUsersSheet />
         </div>
       </div>
