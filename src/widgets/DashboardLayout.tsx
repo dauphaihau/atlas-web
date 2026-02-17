@@ -14,6 +14,7 @@ import {
   SidebarTrigger,
 } from "@/shared/ui/sidebar"
 import { Button } from "@/shared/ui/button"
+import { ImportProgressCard } from "@/shared/ui/import-progress-card"
 import { LayoutDashboard, LogOut, Settings, Users } from "lucide-react"
 import { AuthGuard } from "@/widgets/AuthGuard"
 import { useMeQuery } from "@/shared/queries/auth"
@@ -64,8 +65,12 @@ export function DashboardLayout() {
           </SidebarContent>
         </Sidebar>
 
-        <SidebarInset>
-          <header className="flex h-12 shrink-0 items-center gap-2 border-b border-border px-4">
+        <SidebarInset className="min-h-0">
+          <div className="fixed top-4 right-4 z-50">
+            <ImportProgressCard />
+          </div>
+
+          <header className="sticky top-0 z-10 flex h-12 shrink-0 items-center gap-2 border-b border-border bg-background px-4">
             <SidebarTrigger className="-ml-1" />
             <div className="ml-auto flex items-center gap-2">
               {me && (
@@ -84,8 +89,11 @@ export function DashboardLayout() {
               </Button>
             </div>
           </header>
-          <main className="flex-1 overflow-auto p-4">
-            <Outlet />
+
+          <main className="flex min-h-0 flex-1 flex-col overflow-hidden p-4">
+            <div className="flex min-h-0 flex-1 flex-col">
+              <Outlet />
+            </div>
           </main>
         </SidebarInset>
       </SidebarProvider>
