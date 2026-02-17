@@ -1,0 +1,39 @@
+---
+description: TSX component structure – extract sub-components and use folder + index when a component has sub-components
+globs: "**/*.tsx"
+---
+
+# TSX component structure
+
+Apply to React component files (`*.tsx`).
+
+## Sub-components (≥ 20 lines)
+
+- Any **sub-component** (function or const component defined in the same file) that is **20 or more lines** (from declaration to closing `}`) must be **extracted into its own file** in the same folder as the parent.
+- Name the file after the component (e.g. `AvatarCell` → `AvatarCell.tsx`).
+- Export the component from the new file and import it in the parent.
+
+## Folder when a component has sub-components
+
+- When a component has one or more **local sub-components** (in-file or extracted), put the **main component** in a **folder named after it**, with the main file named the same:
+  - **Before:** `components/UsersTable.tsx`
+  - **After:** `components/UsersTable/UsersTable.tsx`, plus `components/UsersTable/AvatarCell.tsx`, etc.
+- Add **`ComponentName/index.ts`** that re-exports the main component so imports stay clean: `from "./components/UsersTable"` (no path change for consumers).
+- Primary export lives in `ComponentName/ComponentName.tsx`; sub-components in sibling files (e.g. `AvatarCell.tsx`).
+
+### Visual
+
+```
+components/
+└── UsersTable/
+    ├── index.ts         ← export { UsersTable } from "./UsersTable"
+    ├── UsersTable.tsx   ← main component; imports AvatarCell
+    └── AvatarCell.tsx   ← extracted sub-component (≥20 lines)
+
+page.tsx  ──import──►  "./components/UsersTable"  (unchanged; resolves to index.ts)
+```
+
+## Examples
+
+- **UsersTable** has sub-component **AvatarCell** (≥ 20 lines) → create `UsersTable/UsersTable.tsx`, `UsersTable/AvatarCell.tsx`, and `UsersTable/index.ts` re-exporting `UsersTable`.
+- **UsersPage** in `page.tsx` only uses sibling components (`UsersTable`, `AddUserSheet`) → no folder needed unless the page file itself contains large in-file sub-components.
