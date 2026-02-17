@@ -5,15 +5,19 @@ import type {
   RegisterResponseDto,
   UserDto,
 } from "./dto"
-import { api } from "@/shared/lib/api-client"
+import { api, type ApiResponseWrapper, unwrapData } from "@/shared/lib/api-client"
 
 export const authApi = {
   login(payload: LoginRequestDto): Promise<LoginResponseDto> {
-    return api.post<LoginResponseDto>("/api/v1/login", payload, { skipAuth: true })
+    return api
+      .post<ApiResponseWrapper<LoginResponseDto>>("/api/v1/login", payload, { skipAuth: true })
+      .then(unwrapData)
   },
 
   register(payload: RegisterRequestDto): Promise<RegisterResponseDto> {
-    return api.post<RegisterResponseDto>("/api/v1/register", payload, { skipAuth: true })
+    return api
+      .post<ApiResponseWrapper<RegisterResponseDto>>("/api/v1/register", payload, { skipAuth: true })
+      .then(unwrapData)
   },
 
   logout(): Promise<void> {
@@ -21,6 +25,6 @@ export const authApi = {
   },
 
   me(): Promise<UserDto> {
-    return api.get<UserDto>("/api/v1/me")
+    return api.get<ApiResponseWrapper<UserDto>>("/api/v1/me").then(unwrapData)
   },
 }
