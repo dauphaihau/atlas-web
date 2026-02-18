@@ -34,6 +34,7 @@ export interface ImportStatusDto {
 export interface ListUsersParams {
   page?: number
   per_page?: number
+  search?: string
 }
 
 /** GET /v1/users response (paginated list). */

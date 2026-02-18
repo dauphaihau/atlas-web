@@ -1,6 +1,7 @@
 export interface ListUsersQueryParams {
   page?: number
   per_page?: number
+  search?: string
 }
 
 export const userKeys = {

@@ -11,13 +11,14 @@ import { api, type ApiResponseWrapper, unwrapData } from "@/shared/lib/api-clien
 
 function buildListUsersUrl(params?: ListUsersParams): string {
   const base = "/api/v1/users"
-  if (!params || (params.page === undefined && params.per_page === undefined)) {
-    return base
-  }
-  const search = new URLSearchParams()
-  if (params.page !== undefined) search.set("page", String(params.page))
-  if (params.per_page !== undefined) search.set("per_page", String(params.per_page))
-  return `${base}?${search.toString()}`
+  if (!params) return base
+  const searchParams = new URLSearchParams()
+  if (params.page !== undefined) searchParams.set("page", String(params.page))
+  if (params.per_page !== undefined) searchParams.set("per_page", String(params.per_page))
+  if (params.search !== undefined && params.search !== "")
+    searchParams.set("search", params.search)
+  const qs = searchParams.toString()
+  return qs ? `${base}?${qs}` : base
 }
 
 export const userApi = {
