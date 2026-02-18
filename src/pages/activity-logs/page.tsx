@@ -12,6 +12,14 @@ import {
 import { Input } from "@/shared/ui/input"
 import { Button } from "@/shared/ui/button"
 import { Skeleton } from "@/shared/ui/skeleton"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/ui/table"
 import { X } from "lucide-react"
 
 const DEFAULT_PER_PAGE = 15
@@ -155,39 +163,36 @@ export function ActivityLogsPage() {
             </div>
           ) : (
             <div className="min-h-0 flex-1 overflow-auto">
-              <table className=" w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border bg-muted/50">
-                    <th className="h-10 px-4 text-left font-medium">ID</th>
-                    <th className="h-10 px-4 text-left font-medium">Event</th>
-                    <th className="h-10 px-4 text-left font-medium">Subject</th>
-                    <th className="h-10 px-4 text-left font-medium">Causer</th>
-                    <th className="h-10 px-4 text-left font-medium">Date</th>
-                  </tr>
-                </thead>
-                <tbody>
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-b border-border bg-muted/50 hover:bg-muted/50">
+                    <TableHead>ID</TableHead>
+                    <TableHead>Event</TableHead>
+                    <TableHead>Subject</TableHead>
+                    <TableHead>Causer</TableHead>
+                    <TableHead>Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {entries.map((log) => (
-                    <tr
-                      key={log.id}
-                      className="border-b border-border hover:bg-muted/30"
-                    >
-                      <td className="px-4 py-3 font-mono text-muted-foreground">
+                    <TableRow key={log.id}>
+                      <TableCell className="font-mono text-muted-foreground">
                         {log.id}
-                      </td>
-                      <td className="px-4 py-3 font-medium">{log.event}</td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      </TableCell>
+                      <TableCell className="font-medium">{log.event}</TableCell>
+                      <TableCell className="text-muted-foreground">
                         {log.subject_type ?? "—"} #{log.subject_id ?? "—"}
-                      </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
                         {log.causer_name ?? log.causer_email ?? "—"}
-                      </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
                         {formatIsoDate(log.created_at)}
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           )}
         </div>

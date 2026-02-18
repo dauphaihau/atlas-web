@@ -6,6 +6,14 @@ import {
 import { useDebouncedValue } from "@/shared/hooks/use-debounced-value"
 import { Input } from "@/shared/ui/input"
 import { Skeleton } from "@/shared/ui/skeleton"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/ui/table"
 import { AvatarCell } from "./AvatarCell"
 import { TablePagination } from "./TablePagination"
 import { Button } from "@/shared/ui/button"
@@ -111,38 +119,37 @@ export function UsersTable() {
           </div>
         ) : (
           <div className="min-h-0 flex-1 overflow-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border bg-muted/50">
-                  <th className="h-10 px-4 text-left font-medium">Avatar</th>
-                  <th className="h-10 px-4 text-left font-medium">Name</th>
-                  <th className="h-10 px-4 text-left font-medium">Email</th>
-                  <th className="h-10 px-4 text-left font-medium">Created</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b border-border bg-muted/50 hover:bg-muted/50">
+                  <TableHead>Avatar</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Created</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {users.map((user) => (
-                  <tr
-                    key={user.id}
-                    className="border-b border-border hover:bg-muted/30"
-                  >
-                    <td className="px-4 py-3">
+                  <TableRow key={user.id}>
+                    <TableCell>
                       <AvatarCell
                         user={user}
                         onUpload={(userId, file) =>
                           updateAvatar.mutate({ userId, file })
                         }
                       />
-                    </td>
-                    <td className="px-4 py-3 font-medium">{user.name}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{user.email}</td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    </TableCell>
+                    <TableCell className="font-medium">{user.name}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {user.email}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
                       {user.created_at ?? "—"}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
       </div>
