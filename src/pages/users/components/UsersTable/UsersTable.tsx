@@ -3,17 +3,29 @@ import {
   useUsersQuery,
   useUpdateUserAvatarMutation,
 } from "@/shared/queries/user"
+import { useDebouncedValue } from "@/shared/hooks/use-debounced-value"
+import { Input } from "@/shared/ui/input"
 import { Skeleton } from "@/shared/ui/skeleton"
 import { AvatarCell } from "./AvatarCell"
 import { TablePagination } from "./TablePagination"
+import { Button } from "@/shared/ui/button"
+import { X } from "lucide-react"
 
 const DEFAULT_PER_PAGE = 11
+const SEARCH_DEBOUNCE_MS = 300
 
 export function UsersTable() {
   const [page, setPage] = useState(1)
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE)
+  const [searchInput, setSearchInput] = useState("")
+  const debouncedSearch = useDebouncedValue(searchInput, SEARCH_DEBOUNCE_MS)
+  const effectiveSearch = debouncedSearch.trim() || undefined
 
-  const usersQuery = useUsersQuery({ page, per_page: perPage })
+  const usersQuery = useUsersQuery({
+    page,
+    per_page: perPage,
+    search: effectiveSearch,
+  })
   const updateAvatar = useUpdateUserAvatarMutation()
 
   const users = usersQuery.data?.data ?? []
@@ -46,6 +58,37 @@ export function UsersTable() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
+      <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+        <label className="flex min-w-0 flex-1 items-center gap-2">
+          <span className="sr-only">Search by name or email</span>
+          <Input
+            type="search"
+            placeholder="Search by name or email"
+            value={searchInput}
+            onChange={(e) => {
+            setSearchInput(e.target.value)
+            setPage(1)
+          }}
+            aria-label="Search by name or email"
+            className="max-w-sm"
+          />
+        </label>
+        {searchInput.length > 0 && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSearchInput("")
+              setPage(1)
+            }}
+            aria-label="Clear search"
+          >
+            <X className="size-4" />
+            Clear
+          </Button>
+        )}
+      </div>
 
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border">
         {usersQuery.isLoading ? (
@@ -62,11 +105,13 @@ export function UsersTable() {
           </div>
         ) : users.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground text-sm">
-            No users yet. Add a user or import from CSV.
+            {effectiveSearch
+              ? "No users match your search."
+              : "No users yet. Add a user or import from CSV."}
           </div>
         ) : (
           <div className="min-h-0 flex-1 overflow-auto">
-            <table className="w-full text-sm h-full">
+            <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
                   <th className="h-10 px-4 text-left font-medium">Avatar</th>
