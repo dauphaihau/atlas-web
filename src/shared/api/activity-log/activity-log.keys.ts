@@ -8,6 +8,7 @@ export interface ListActivityLogsQueryParams {
   from_date?: string
   to_date?: string
   sort?: string
+  search?: string
 }
 
 export const activityLogKeys = {

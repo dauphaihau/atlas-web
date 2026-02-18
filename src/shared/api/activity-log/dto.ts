@@ -24,6 +24,7 @@ export interface ListActivityLogsParams {
   from_date?: string
   to_date?: string
   sort?: string
+  search?: string
 }
 
 /** GET /v1/activity-logs response (paginated). */
