@@ -4,6 +4,7 @@ export interface UserDto {
   name: string
   email: string
   avatar_url: string | null
+  role?: string | null
   created_at: string | null
 }
 

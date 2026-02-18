@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom"
 import { TooltipProvider } from "@/shared/ui/tooltip"
 import { DashboardLayout } from "@/widgets/DashboardLayout"
+import { ActivityLogsPage } from "@/pages/activity-logs/page"
 import { DashboardPage } from "@/pages/dashboard/page"
 import { LoginPage } from "@/pages/login/page"
 import { RegisterPage } from "@/pages/register/page"
@@ -17,6 +18,7 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route index element={<DashboardPage />} />
             <Route path="users" element={<UsersPage />} />
+            <Route path="activity-logs" element={<ActivityLogsPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

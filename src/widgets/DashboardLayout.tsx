@@ -15,16 +15,22 @@ import {
 } from "@/shared/ui/sidebar"
 import { Button } from "@/shared/ui/button"
 import { ImportProgressCard } from "@/shared/ui/import-progress-card"
-import { LayoutDashboard, LogOut, Settings, Users } from "lucide-react"
+import { LayoutDashboard, ListChecks, LogOut, Settings, Users } from "lucide-react"
 import { AuthGuard } from "@/widgets/AuthGuard"
 import { useMeQuery } from "@/shared/queries/auth"
 import { useLogoutMutation } from "@/shared/queries/auth"
 
-const navItems = [
+const navItems: Array<{
+  to: string
+  label: string
+  icon: typeof LayoutDashboard
+  adminOnly?: boolean
+}> = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/users", label: "Users", icon: Users },
+  { to: "/activity-logs", label: "Activity Logs", icon: ListChecks, adminOnly: true },
   { to: "/settings", label: "Settings", icon: Settings },
-] as const
+]
 
 export function DashboardLayout() {
   const location = useLocation()
@@ -46,19 +52,22 @@ export function DashboardLayout() {
               <SidebarGroupLabel>Navigation</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {navItems.map(({ to, label, icon: Icon }) => (
-                    <SidebarMenuItem key={to}>
-                      <SidebarMenuButton
-                        render={(props) => (
-                          <Link to={to} {...props}>
-                            <Icon />
-                            <span>{label}</span>
-                          </Link>
-                        )}
-                        isActive={location.pathname === to}
-                      />
-                    </SidebarMenuItem>
-                  ))}
+                  {navItems.map(({ to, label, icon: Icon, adminOnly }) => {
+                    if (adminOnly && (me?.role ?? null) !== "admin") return null
+                    return (
+                      <SidebarMenuItem key={to}>
+                        <SidebarMenuButton
+                          render={(props) => (
+                            <Link to={to} {...props}>
+                              <Icon />
+                              <span>{label}</span>
+                            </Link>
+                          )}
+                          isActive={location.pathname === to}
+                        />
+                      </SidebarMenuItem>
+                    )
+                  })}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
