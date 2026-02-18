@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react"
 import { useActivityLogsQuery } from "@/shared/queries/activity-log"
 import { useMeQuery } from "@/shared/queries/auth"
+import { useDebouncedValue } from "@/shared/hooks/use-debounced-value"
 import {
   Pagination,
   PaginationContent,
@@ -8,10 +9,14 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/shared/ui/pagination"
+import { Input } from "@/shared/ui/input"
+import { Button } from "@/shared/ui/button"
 import { Skeleton } from "@/shared/ui/skeleton"
+import { X } from "lucide-react"
 
 const DEFAULT_PER_PAGE = 15
 const PER_PAGE_OPTIONS = [10, 15, 25, 50] as const
+const SEARCH_DEBOUNCE_MS = 300
 
 function formatIsoDate(iso: string | null | undefined): string {
   if (!iso) return "—"
@@ -29,8 +34,15 @@ export function ActivityLogsPage() {
 
   const [page, setPage] = useState(1)
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE)
+  const [searchInput, setSearchInput] = useState("")
+  const debouncedSearch = useDebouncedValue(searchInput, SEARCH_DEBOUNCE_MS)
+  const effectiveSearch = debouncedSearch.trim() || undefined
 
-  const activityLogsQuery = useActivityLogsQuery({ page, per_page: perPage })
+  const activityLogsQuery = useActivityLogsQuery({
+    page,
+    per_page: perPage,
+    search: effectiveSearch,
+  })
 
   const entries = activityLogsQuery.data?.data ?? []
   const meta = activityLogsQuery.data?.meta
@@ -51,7 +63,7 @@ export function ActivityLogsPage() {
 
   const handlePerPageChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const value = Number(e.value)
+      const value = Number(e.target.value)
       if (Number.isInteger(value) && value >= 1 && value <= 100) {
         setPerPage(value)
         setPage(1)
@@ -90,6 +102,38 @@ export function ActivityLogsPage() {
       )}
 
       <div className="flex min-h-0 flex-1 flex-col gap-4">
+        <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="flex min-w-0 flex-1 items-center gap-2">
+            <span className="sr-only">Search event, subject, causer</span>
+            <Input
+              type="search"
+              placeholder="Search event, subject, causer…"
+              value={searchInput}
+              onChange={(e) => {
+                setSearchInput(e.target.value)
+                setPage(1)
+              }}
+              aria-label="Search event, subject, causer"
+              className="max-w-sm"
+            />
+          </label>
+          {searchInput.length > 0 && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setSearchInput("")
+                setPage(1)
+              }}
+              aria-label="Clear search"
+            >
+              <X className="size-4" />
+              Clear
+            </Button>
+          )}
+        </div>
+
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-border">
           {activityLogsQuery.isLoading ? (
             <div className="space-y-3 p-4">
@@ -105,7 +149,9 @@ export function ActivityLogsPage() {
             </div>
           ) : entries.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground text-sm">
-              No activity logs found.
+              {effectiveSearch
+                ? "No activity logs match your search."
+                : "No activity logs found."}
             </div>
           ) : (
             <div className="min-h-0 flex-1 overflow-auto">
