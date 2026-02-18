@@ -35,6 +35,7 @@ export interface ListUsersParams {
   page?: number
   per_page?: number
   search?: string
+  trashed?: "with" | "only"
 }
 
 /** GET /v1/users response (paginated list). */

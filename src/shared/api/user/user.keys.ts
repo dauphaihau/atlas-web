@@ -2,6 +2,7 @@ export interface ListUsersQueryParams {
   page?: number
   per_page?: number
   search?: string
+  trashed?: "with" | "only"
 }
 
 export const userKeys = {

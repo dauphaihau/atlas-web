@@ -6,6 +6,7 @@ export interface UserDto {
   avatar_url: string | null
   role?: string | null
   created_at: string | null
+  deleted_at?: string | null
 }
 
 /** POST /v1/login request body. */

@@ -17,6 +17,7 @@ function buildListUsersUrl(params?: ListUsersParams): string {
   if (params.per_page !== undefined) searchParams.set("per_page", String(params.per_page))
   if (params.search !== undefined && params.search !== "")
     searchParams.set("search", params.search)
+  if (params.trashed !== undefined) searchParams.set("trashed", params.trashed)
   const qs = searchParams.toString()
   return qs ? `${base}?${qs}` : base
 }
@@ -67,5 +68,20 @@ export const userApi = {
     return api
       .get<ApiResponseWrapper<ExportUsersResponseDto>>("/api/v1/users/export")
       .then(unwrapData)
+  },
+
+  /** Soft-delete a user (sets deleted_at). */
+  deleteUser(id: number): Promise<void> {
+    return api.delete(`/api/v1/users/${id}`).then(() => undefined)
+  },
+
+  /** Restore a soft-deleted user. */
+  restoreUser(id: number): Promise<void> {
+    return api.post(`/api/v1/users/${id}/restore`).then(() => undefined)
+  },
+
+  /** Permanently delete a user. Cannot be undone. */
+  forceDeleteUser(id: number): Promise<void> {
+    return api.delete(`/api/v1/users/${id}/force`).then(() => undefined)
   },
 }
