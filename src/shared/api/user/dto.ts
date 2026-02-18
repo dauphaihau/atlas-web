@@ -54,3 +54,10 @@ export interface ExportUsersResponseDto {
   url: string
   expires_at?: string
 }
+
+/** GET /v1/users/stats response (counts for tabs/dashboard). */
+export interface UserStatsDto {
+  total_active: number
+  total_deleted: number
+  created_today: number
+}

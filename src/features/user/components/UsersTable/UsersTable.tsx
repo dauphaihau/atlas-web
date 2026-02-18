@@ -5,6 +5,7 @@ import {
   useDeleteUserMutation,
   useRestoreUserMutation,
   useForceDeleteUserMutation,
+  useUserStatsQuery,
 } from "@/shared/queries/user"
 import { useDebouncedValue } from "@/shared/hooks/use-debounced-value"
 import type { UserDto } from "@/shared/api/user"
@@ -72,6 +73,7 @@ export function UsersTable({ onEdit, onDelete }: UsersTableProps) {
     search: effectiveSearch,
     trashed: activeTab === "deleted" ? "only" : undefined,
   })
+  const statsQuery = useUserStatsQuery()
   const updateAvatar = useUpdateUserAvatarMutation()
   const deleteUserMutation = useDeleteUserMutation()
   const restoreUserMutation = useRestoreUserMutation()
@@ -128,9 +130,19 @@ export function UsersTable({ onEdit, onDelete }: UsersTableProps) {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-4">
       <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList variant="default">
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="deleted">Deleted</TabsTrigger>
+        <TabsList variant="line">
+          <TabsTrigger value="all">
+            All
+            {statsQuery.data !== undefined ? (
+              <span className="ml-.5 tabular-nums">({statsQuery.data.total_active})</span>
+            ) : null}
+          </TabsTrigger>
+          <TabsTrigger value="deleted">
+            Deleted
+            {statsQuery.data !== undefined ? (
+              <span className="ml-.5 tabular-nums">({statsQuery.data.total_deleted})</span>
+            ) : null}
+          </TabsTrigger>
         </TabsList>
       </Tabs>
       <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
@@ -189,8 +201,8 @@ export function UsersTable({ onEdit, onDelete }: UsersTableProps) {
         ) : (
           <div className="min-h-0 flex-1 overflow-auto">
             <Table>
-              <TableHeader>
-                <TableRow className="border-b border-border bg-muted/50 hover:bg-muted/50">
+              <TableHeader className="sticky top-0 z-[1] bg-muted/50 [&_tr]:border-b [&_th]:bg-muted/50 [&_th]:shadow-[0_1px_0_0_hsl(var(--border))]">
+                <TableRow className="border-b border-border hover:bg-muted/50">
                   <TableHead scope="col">Avatar</TableHead>
                   <TableHead scope="col">Name</TableHead>
                   <TableHead scope="col">Email</TableHead>

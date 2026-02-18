@@ -1,4 +1,5 @@
 export { useUsersQuery } from "./get-users.query"
+export { useUserStatsQuery } from "./get-user-stats.query"
 export { useCreateUserMutation } from "./create-user.mutation"
 export { useDeleteUserMutation } from "./delete-user.mutation"
 export { useRestoreUserMutation } from "./restore-user.mutation"

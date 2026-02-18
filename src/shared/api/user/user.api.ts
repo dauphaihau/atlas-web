@@ -6,6 +6,7 @@ import type {
   ListUsersParams,
   ListUsersResponseDto,
   UserDto,
+  UserStatsDto,
 } from "./dto"
 import { api, type ApiResponseWrapper, unwrapData } from "@/shared/lib/api-client"
 
@@ -67,6 +68,13 @@ export const userApi = {
   exportUsers(): Promise<ExportUsersResponseDto> {
     return api
       .get<ApiResponseWrapper<ExportUsersResponseDto>>("/api/v1/users/export")
+      .then(unwrapData)
+  },
+
+  /** User counts (active, deleted, created today) for tabs/dashboard. */
+  getStats(): Promise<UserStatsDto> {
+    return api
+      .get<ApiResponseWrapper<UserStatsDto>>("/api/v1/users/stats")
       .then(unwrapData)
   },
 
