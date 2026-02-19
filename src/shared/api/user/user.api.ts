@@ -48,6 +48,11 @@ export const userApi = {
       .then(unwrapData)
   },
 
+  /** Cancel an in-progress user import. No-op if already completed/cancelled. */
+  cancelImport(id: number): Promise<void> {
+    return api.delete(`/api/v1/users/import/${id}`).then(() => undefined)
+  },
+
   updateMyAvatar(file: File): Promise<UserDto> {
     const formData = new FormData()
     formData.append("avatar", file)

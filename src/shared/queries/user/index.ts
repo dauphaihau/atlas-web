@@ -6,6 +6,7 @@ export { useRestoreUserMutation } from "./restore-user.mutation"
 export { useForceDeleteUserMutation } from "./force-delete-user.mutation"
 export { useExportUsersMutation } from "./export-users.mutation"
 export { useImportUsersMutation } from "./import-users.mutation"
+export { useCancelImportMutation } from "./cancel-import.mutation"
 export {
   useUpdateMyAvatarMutation,
   useUpdateUserAvatarMutation,
