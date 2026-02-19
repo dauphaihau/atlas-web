@@ -14,9 +14,10 @@ import {
   SidebarTrigger,
 } from "@/shared/ui/sidebar"
 import { Button } from "@/shared/ui/button"
-import { ImportProgressCard } from "@/shared/ui/import-progress-card"
+import { ImportProgressCard } from "@/features/user"
 import { LayoutDashboard, ListChecks, LogOut, Settings, Users } from "lucide-react"
 import { AuthGuard } from "@/widgets/AuthGuard"
+import { useImportProgressStore } from "@/shared/store/import-progress.store"
 import { useMeQuery } from "@/shared/queries/auth"
 import { useLogoutMutation } from "@/shared/queries/auth"
 
@@ -37,6 +38,9 @@ export function DashboardLayout() {
   const navigate = useNavigate()
   const { data: me } = useMeQuery()
   const logout = useLogoutMutation()
+  const hideProgressCardInLayout = useImportProgressStore(
+    (s) => s.hideProgressCardInLayout
+  )
 
   return (
     <AuthGuard>
@@ -75,9 +79,11 @@ export function DashboardLayout() {
         </Sidebar>
 
         <SidebarInset className="min-h-0">
-          <div className="fixed top-4 right-4 z-50">
-            <ImportProgressCard />
-          </div>
+          {!hideProgressCardInLayout && (
+            <div className="fixed top-4 right-4 z-50">
+              <ImportProgressCard />
+            </div>
+          )}
 
           <header className="sticky top-0 z-10 flex h-12 shrink-0 items-center gap-2 border-b border-border bg-background px-4">
             <SidebarTrigger className="-ml-1" />
