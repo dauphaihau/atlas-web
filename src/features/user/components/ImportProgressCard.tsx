@@ -47,10 +47,13 @@ export function ImportProgressCard() {
     const importId = activeImport.id
     const unsubscribe = subscribeToImport(importId, {
       onProgress: (payload) => {
-        queryClient.setQueryData(
-          userKeys.importStatus(importId),
-          importStatusFromProgress(importId, payload)
-        )
+        queryClient.setQueryData(userKeys.importStatus(importId), (old: { progress_percentage?: number } | undefined) => {
+          const next = importStatusFromProgress(importId, payload)
+          const incoming = payload?.progressPercentage
+          const current: number = old != null && Number.isFinite(old.progress_percentage) ? (old.progress_percentage as number) : -1
+          if (Number.isFinite(incoming) && incoming < current) return old
+          return next
+        })
       },
       onCompleted: (payload) => {
         queryClient.setQueryData(

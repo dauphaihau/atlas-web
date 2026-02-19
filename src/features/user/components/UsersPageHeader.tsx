@@ -1,6 +1,6 @@
 import { ExportUsersButton } from "./ExportUsersButton"
 import { AddUserDialog } from "./AddUserDialog"
-import { ImportUsersSheet } from "./ImportUsersSheet"
+import { ImportUsersDialog } from "./ImportUsersDialog"
 
 export function UsersPageHeader() {
   return (
@@ -14,7 +14,7 @@ export function UsersPageHeader() {
       <div className="flex gap-2">
         <ExportUsersButton />
         <AddUserDialog />
-        <ImportUsersSheet />
+        <ImportUsersDialog />
       </div>
     </div>
   )
