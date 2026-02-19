@@ -56,27 +56,29 @@ export function TablePagination({
           </select>
         </label>
       </div>
-      <Pagination className="mx-0 w-auto" aria-label={ariaLabel}>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={onPrev}
-              disabled={currentPage <= 1}
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <span className="text-sm text-muted-foreground px-2">
-              Page {currentPage} of {totalPages}
-            </span>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              onClick={onNext}
-              disabled={currentPage >= totalPages}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      {totalPages > 1 && (
+        <Pagination className="mx-0 w-auto" aria-label={ariaLabel}>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={onPrev}
+                disabled={currentPage <= 1}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <span className="text-sm text-muted-foreground px-2">
+                Page {currentPage} of {totalPages}
+              </span>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                onClick={onNext}
+                disabled={currentPage >= totalPages}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   )
 }
