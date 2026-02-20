@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import type { RegisterRequestDto } from "@/shared/api/auth"
 import { authApi, authKeys } from "@/shared/api/auth"
-import { setTokenCookie } from "@/shared/utils/get-token-cookie-name"
+import { setTokenCookie } from "@/shared/utils/token-cookie"
 
 export function useRegisterMutation() {
   const queryClient = useQueryClient()

@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom"
 import { useQueryClient } from "@tanstack/react-query"
 import { useMeQuery } from "@/shared/queries/auth"
 import { authKeys } from "@/shared/api/auth"
-import { getTokenFromCookie, clearTokenCookie } from "@/shared/utils/get-token-cookie-name"
+import { getTokenFromCookie, clearTokenCookie } from "@/shared/utils/token-cookie"
 import { Skeleton } from "@/shared/ui/skeleton"
 
 interface AuthGuardProps {

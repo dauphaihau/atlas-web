@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { authApi, authKeys } from "@/shared/api/auth"
 import { clearEtagCache } from "@/shared/lib/api-client"
-import { clearTokenCookie } from "@/shared/utils/get-token-cookie-name"
+import { clearTokenCookie } from "@/shared/utils/token-cookie"
 
 export function useLogoutMutation() {
   const queryClient = useQueryClient()

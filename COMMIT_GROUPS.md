@@ -5,7 +5,7 @@ Use this as a reference when splitting work into PRs or when creating a more gra
 ## 1. API client & token cookie
 
 - `src/shared/lib/api-client.ts`
-- `src/shared/utils/get-token-cookie-name.ts`
+- `src/shared/utils/token-cookie.ts`
 
 **Message:** `chore(api): add API client (axios-style) and token cookie helpers`
 

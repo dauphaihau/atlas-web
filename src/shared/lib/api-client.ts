@@ -1,4 +1,4 @@
-import { getTokenFromCookie } from "@/shared/utils/get-token-cookie-name"
+import { getTokenFromCookie } from "@/shared/utils/token-cookie"
 
 const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "")
 const API_PREFIX = "/api/v1"

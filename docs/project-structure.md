@@ -154,7 +154,7 @@ shared/
 │   └── project/
 │       └── get-project.query.ts
 └── utils/                     # Shared utility functions
-    └── get-token-cookie-name.ts
+    └── token-cookie.ts
 ```
 
 ### Organization Pattern

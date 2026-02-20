@@ -6,7 +6,7 @@
 import Echo from "laravel-echo"
 import Pusher from "pusher-js"
 import { getApiUrl } from "@/shared/lib/api-client"
-import { getTokenFromCookie } from "@/shared/utils/get-token-cookie-name"
+import { getTokenFromCookie } from "@/shared/utils/token-cookie"
 
 declare global {
   interface Window {
