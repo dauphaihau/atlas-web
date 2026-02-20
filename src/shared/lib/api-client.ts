@@ -46,6 +46,17 @@ export function unwrapData<T>(res: ApiResponseWrapper<T> | null): T {
   return res.data
 }
 
+/**
+ * In-memory cache for GET responses that support ETag.
+ * Key: full request URL (same URL may be used with different auth; server sends Vary: Authorization).
+ */
+const etagCache = new Map<string, { etag: string; data: unknown }>()
+
+/** Clear ETag cache (e.g. on logout so the next user does not send the previous user's If-None-Match). */
+export function clearEtagCache(): void {
+  etagCache.clear()
+}
+
 function buildHeaders(init: RequestInit, body: string | FormData | undefined): Headers {
   const headers = new Headers(init.headers)
   if (!headers.has("Accept")) {
@@ -82,8 +93,29 @@ async function request<T>(
     }
   }
 
+  // GET: send If-None-Match when we have a cached ETag for this URL
+  if (method === "GET") {
+    const cached = etagCache.get(url)
+    if (cached?.etag) {
+      headers.set("If-None-Match", cached.etag)
+    }
+  }
+
   const res = await fetch(url, { ...init, method, headers, body })
   const text = await res.text()
+
+  // 304 Not Modified: no body; reuse cached data for this URL
+  if (res.status === 304) {
+    const cached = etagCache.get(url)
+    if (cached?.data != null) {
+      return cached.data as T
+    }
+    // No cache entry (e.g. tab reopened); force refetch by throwing so caller can retry
+    const err = new Error("Not Modified (no cached data)") as Error & { status?: number }
+    err.status = 304
+    throw err
+  }
+
   let parsed: unknown
   try {
     parsed = text ? JSON.parse(text) : null
@@ -100,6 +132,14 @@ async function request<T>(
     err.status = res.status
     err.body = parsed
     throw err
+  }
+
+  // GET 200: store ETag + body for future If-None-Match / 304
+  if (method === "GET" && res.status === 200) {
+    const etag = res.headers.get("ETag")
+    if (etag?.trim()) {
+      etagCache.set(url, { etag: etag.trim(), data: parsed })
+    }
   }
 
   return parsed as T
