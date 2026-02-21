@@ -57,7 +57,7 @@ export function DashboardLayout() {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {navItems.map(({ to, label, icon: Icon, adminOnly }) => {
-                    if (adminOnly && (me?.role ?? null) !== "admin") return null
+                    if (adminOnly && !me?.roles?.includes("admin")) return null
                     return (
                       <SidebarMenuItem key={to}>
                         <SidebarMenuButton
