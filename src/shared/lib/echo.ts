@@ -1,12 +1,11 @@
 /**
  * Laravel Echo client for Reverb (WebSockets).
- * Private channel auth uses the same API base and Bearer token as the rest of the app.
+ * Private channel auth uses the same API base; auth is via server-set HttpOnly cookie (credentials: include).
  */
 
 import Echo from "laravel-echo"
 import Pusher from "pusher-js"
 import { getApiUrl } from "@/shared/lib/api-client"
-import { getTokenFromCookie } from "@/shared/utils/token-cookie"
 
 declare global {
   interface Window {
@@ -32,8 +31,32 @@ export function isEchoConfigured(): boolean {
 }
 
 /**
+ * Custom Pusher authorizer that calls the auth endpoint with credentials so the browser sends the HttpOnly cookie.
+ */
+function createCookieAuthorizer(authEndpoint: string) {
+  return (_channel: { name: string }, _options: { authEndpoint: string }) => ({
+    authorize(socketId: string, callback: (error: boolean, data?: Record<string, unknown>) => void) {
+      fetch(authEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ socket_id: socketId, channel_name: _channel.name }),
+        credentials: "include",
+      })
+        .then((res) => {
+          if (!res.ok) {
+            callback(true)
+            return
+          }
+          return res.json().then((data) => callback(false, data))
+        })
+        .catch(() => callback(true))
+    },
+  })
+}
+
+/**
  * Returns a lazily-created Echo instance, or null if Reverb env vars are missing.
- * Auth headers are set at creation time (current token from cookie).
+ * Auth uses credentials so the server-set HttpOnly cookie is sent to the broadcasting auth endpoint.
  */
 export function getEcho(): Echo<"reverb"> | null {
   if (!isEchoConfigured()) {
@@ -42,20 +65,22 @@ export function getEcho(): Echo<"reverb"> | null {
   if (echoInstance != null) {
     return echoInstance
   }
-  const token = getTokenFromCookie()
-  echoInstance = new Echo({
-    broadcaster: "reverb",
+  const authEndpoint = getApiUrl("broadcasting/auth")
+  const options = {
+    broadcaster: "reverb" as const,
     key: REVERB_KEY,
     wsHost: REVERB_HOST,
     wsPort: REVERB_PORT ? Number(REVERB_PORT) : 80,
     wssPort: REVERB_PORT ? Number(REVERB_PORT) : 443,
     forceTLS: REVERB_SCHEME === "https",
-    enabledTransports: ["ws", "wss"],
-    authEndpoint: getApiUrl("broadcasting/auth"),
-    auth: {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    },
-  })
+    enabledTransports: ["ws", "wss"] as const,
+    authEndpoint,
+    auth: { headers: {} },
+    authorizer: createCookieAuthorizer(authEndpoint),
+  }
+  // authorizer is a Pusher option (cookie-based auth); Echo passes options through to Pusher
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  echoInstance = new Echo(options as any)
   return echoInstance
 }
 
