@@ -1,16 +1,17 @@
 import type {
   LoginRequestDto,
-  LoginResponseDto,
+  LoginWebResponseDto,
   RegisterRequestDto,
   RegisterResponseDto,
   UserDto,
 } from "./dto"
-import { api, type ApiResponseWrapper, unwrapData } from "@/shared/lib/api-client"
+import { api, fetchCsrfCookie, type ApiResponseWrapper, unwrapData } from "@/shared/lib/api-client"
 
 export const authApi = {
-  login(payload: LoginRequestDto): Promise<LoginResponseDto> {
+  async login(payload: LoginRequestDto): Promise<LoginWebResponseDto> {
+    await fetchCsrfCookie()
     return api
-      .post<ApiResponseWrapper<LoginResponseDto>>("/api/v1/login", payload, { skipAuth: true })
+      .post<ApiResponseWrapper<LoginWebResponseDto>>("/api/v1/login", payload, { skipAuth: true })
       .then(unwrapData)
   },
 

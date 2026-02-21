@@ -4,6 +4,9 @@ export interface UserDto {
   name: string
   email: string
   avatar_url: string | null
+  /** Role slugs (RBAC). Use roles for nav/checks; role is deprecated. */
+  roles?: string[]
+  /** @deprecated Use roles instead. */
   role?: string | null
   created_at: string | null
   deleted_at?: string | null
@@ -15,9 +18,14 @@ export interface LoginRequestDto {
   password: string
 }
 
-/** POST /v1/login response. */
+/** POST /v1/login response (Bearer token in body). */
 export interface LoginResponseDto {
   token: string
+  user: UserDto
+}
+
+/** POST /v1/login/web response (token in HttpOnly cookie; no token in body). */
+export interface LoginWebResponseDto {
   user: UserDto
 }
 

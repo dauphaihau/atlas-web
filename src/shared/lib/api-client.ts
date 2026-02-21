@@ -1,5 +1,3 @@
-import { getTokenFromCookie } from "@/shared/utils/token-cookie"
-
 const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "")
 const API_PREFIX = "/api/v1"
 
@@ -23,6 +21,32 @@ export function getApiPathPrefix(): string {
 export function getApiUrl(path: string): string {
   const p = path.startsWith("/") ? path : `${API_PREFIX}/${path.replace(/^\//, "")}`
   return API_BASE ? `${API_BASE}${p}` : p
+}
+
+/**
+ * URL for Laravel Sanctum CSRF cookie endpoint (not under /api/v1).
+ */
+export function getSanctumCsrfUrl(): string {
+  return API_BASE ? `${API_BASE}/sanctum/csrf-cookie` : "/sanctum/csrf-cookie"
+}
+
+/**
+ * Read a cookie value by name from document.cookie. Returns null if not in browser or cookie missing.
+ */
+export function getCookie(name: string): string | null {
+  if (typeof document === "undefined" || !document.cookie) return null
+  const match = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "=([^;]*)"))
+  return match ? match[1] : null
+}
+
+/**
+ * Fetch the Sanctum CSRF cookie so subsequent requests can send X-XSRF-TOKEN.
+ * Call before login when using session/cookie auth. Uses plain fetch (no api client) to avoid circular CSRF.
+ */
+export async function fetchCsrfCookie(): Promise<void> {
+  const url = getSanctumCsrfUrl()
+  const res = await fetch(url, { method: "GET", credentials: "include", headers: { Accept: "application/json" } })
+  if (!res.ok) throw new Error(`CSRF cookie fetch failed: ${res.status} ${res.statusText}`)
 }
 
 export interface ApiRequestOptions extends RequestInit {
@@ -68,6 +92,15 @@ function buildHeaders(init: RequestInit, body: string | FormData | undefined): H
     }
     // FormData: do not set Content-Type so browser sets multipart boundary
   }
+  // Laravel Sanctum: send CSRF token from cookie so stateful requests pass verification
+  const xsrf = getCookie("XSRF-TOKEN")
+  if (xsrf) {
+    try {
+      headers.set("X-XSRF-TOKEN", decodeURIComponent(xsrf))
+    } catch {
+      headers.set("X-XSRF-TOKEN", xsrf)
+    }
+  }
   return headers
 }
 
@@ -78,6 +111,7 @@ async function request<T>(
   options: ApiRequestOptions = {}
 ): Promise<T> {
   const { skipAuth, ...init } = options
+  void skipAuth
   const url = path.startsWith("http") ? path : getApiUrl(path)
 
   let body: string | FormData | undefined
@@ -86,12 +120,7 @@ async function request<T>(
   }
 
   const headers = buildHeaders(init, body)
-  if (!skipAuth) {
-    const token = getTokenFromCookie()
-    if (token) {
-      headers.set("Authorization", "Bearer " + token)
-    }
-  }
+  // Auth is via server-set HttpOnly cookie; browser sends it when credentials: 'include'.
 
   // GET: send If-None-Match when we have a cached ETag for this URL
   if (method === "GET") {
@@ -101,7 +130,7 @@ async function request<T>(
     }
   }
 
-  const res = await fetch(url, { ...init, method, headers, body })
+  const res = await fetch(url, { ...init, method, headers, body, credentials: "include" })
   const text = await res.text()
 
   // 304 Not Modified: no body; reuse cached data for this URL
