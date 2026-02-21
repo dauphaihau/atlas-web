@@ -1,14 +1,20 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
-import { useLoginMutation } from "@/shared/queries/auth"
+import { useLoginMutation, useMeQuery } from "@/shared/queries/auth"
 
 export function LoginPage() {
   const navigate = useNavigate()
   const login = useLoginMutation()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+
+  const { data: me } = useMeQuery({ enabled: true })
+
+  if (me) {
+    return <Navigate to="/" replace />
+  }
 
   type ApiError = { message?: string; body?: { message?: string | string[] } }
   const err = login.error as ApiError | undefined

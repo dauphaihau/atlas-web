@@ -1,9 +1,6 @@
 import { type ReactNode } from "react"
 import { Navigate } from "react-router-dom"
-import { useQueryClient } from "@tanstack/react-query"
 import { useMeQuery } from "@/shared/queries/auth"
-import { authKeys } from "@/shared/api/auth"
-import { getTokenFromCookie, clearTokenCookie } from "@/shared/utils/token-cookie"
 import { Skeleton } from "@/shared/ui/skeleton"
 
 interface AuthGuardProps {
@@ -11,18 +8,11 @@ interface AuthGuardProps {
 }
 
 /**
- * Protects dashboard routes: requires valid token and successful /me.
+ * Protects dashboard routes: requires successful /me (auth via server-set cookie).
  * Redirects to /login when unauthenticated or when /me returns 401.
  */
 export function AuthGuard({ children }: AuthGuardProps) {
-  const queryClient = useQueryClient()
-  const token = getTokenFromCookie()
-
-  if (!token) {
-    return <Navigate to="/login" replace />
-  }
-
-  const { data, isLoading, isError, error } = useMeQuery()
+  const { data, isLoading, isError, error } = useMeQuery({ enabled: true })
   const err = error as { status?: number } | undefined
 
   if (isLoading) {
@@ -35,8 +25,13 @@ export function AuthGuard({ children }: AuthGuardProps) {
   }
 
   if (isError && (err?.status === 401 || !data)) {
-    clearTokenCookie()
-    queryClient.removeQueries({ queryKey: authKeys.all })
+    // Do not call removeQueries here: it removes the query and triggers an immediate refetch
+    // while AuthGuard is still mounted, causing an infinite 401 → refetch loop. Just redirect;
+    // the query stays in error state (no retry on 401) and login mutation sets fresh data on success.
+    return <Navigate to="/login" replace />
+  }
+
+  if (!data) {
     return <Navigate to="/login" replace />
   }
 
