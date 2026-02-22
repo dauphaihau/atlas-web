@@ -6,7 +6,7 @@ import {
   PaginationPrevious,
 } from "@/shared/ui/pagination"
 
-const PER_PAGE_OPTIONS = [10, 15, 25, 50] as const
+export const PER_PAGE_OPTIONS = [10, 15, 25, 50] as const
 
 export interface TablePaginationProps {
   from: number

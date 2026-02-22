@@ -21,7 +21,7 @@ import {
 } from "@/shared/ui/table"
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs"
 import { AvatarCell } from "./AvatarCell"
-import { TablePagination } from "./TablePagination"
+import { TablePagination, PER_PAGE_OPTIONS } from "./TablePagination"
 import { Button } from "@/shared/ui/button"
 import {
   XIcon,
@@ -47,7 +47,6 @@ import {
   AlertDialogTitle,
 } from "@/shared/ui/alert-dialog"
 
-const DEFAULT_PER_PAGE = 11
 const SEARCH_DEBOUNCE_MS = 300
 
 type UsersTab = "all" | "deleted"
@@ -60,7 +59,9 @@ export interface UsersTableProps {
 export function UsersTable({ onEdit, onDelete }: UsersTableProps) {
   const [activeTab, setActiveTab] = useState<UsersTab>("all")
   const [page, setPage] = useState(1)
-  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE)
+  const [perPage, setPerPage] = useState<typeof PER_PAGE_OPTIONS[number]>(
+    PER_PAGE_OPTIONS[0]
+  )
   const [searchInput, setSearchInput] = useState("")
   const [userToDelete, setUserToDelete] = useState<UserDto | null>(null)
   const [userToForceDelete, setUserToForceDelete] = useState<UserDto | null>(null)
@@ -99,8 +100,11 @@ export function UsersTable({ onEdit, onDelete }: UsersTableProps) {
   const handlePerPageChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const value = Number(e.target.value)
-      if (Number.isInteger(value) && value >= 1 && value <= 100) {
-        setPerPage(value)
+      if (
+        Number.isInteger(value) &&
+        (PER_PAGE_OPTIONS as readonly number[]).includes(value)
+      ) {
+        setPerPage(value as typeof PER_PAGE_OPTIONS[number])
         setPage(1)
       }
     },
