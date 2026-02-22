@@ -9,7 +9,9 @@ lerna-debug.log*
 
 node_modules
 dist
-.env
+# .env is tracked; only staging/prod env files are ignored
+.env.stg
+.env.prod
 .env.local
 .env.*.local
 dist-ssr
