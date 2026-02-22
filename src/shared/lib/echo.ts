@@ -5,7 +5,7 @@
 
 import Echo from "laravel-echo"
 import Pusher from "pusher-js"
-import { getApiUrl } from "@/shared/lib/api-client"
+import { getCookie, getApiUrl } from "@/shared/lib/api-client"
 
 declare global {
   interface Window {
@@ -32,13 +32,26 @@ export function isEchoConfigured(): boolean {
 
 /**
  * Custom Pusher authorizer that calls the auth endpoint with credentials so the browser sends the HttpOnly cookie.
+ * Mirrors the X-XSRF-TOKEN logic in api-client.ts buildHeaders() so CSRF validation passes.
  */
 function createCookieAuthorizer(authEndpoint: string) {
   return (_channel: { name: string }, _options: { authEndpoint: string }) => ({
     authorize(socketId: string, callback: (error: boolean, data?: Record<string, unknown>) => void) {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }
+      const xsrf = getCookie("XSRF-TOKEN")
+      if (xsrf) {
+        try {
+          headers["X-XSRF-TOKEN"] = decodeURIComponent(xsrf)
+        } catch {
+          headers["X-XSRF-TOKEN"] = xsrf
+        }
+      }
       fetch(authEndpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers,
         body: JSON.stringify({ socket_id: socketId, channel_name: _channel.name }),
         credentials: "include",
       })
