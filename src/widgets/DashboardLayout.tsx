@@ -4,7 +4,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
@@ -27,11 +26,11 @@ const navItems: Array<{
   icon: typeof LayoutDashboard
   adminOnly?: boolean
 }> = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/users", label: "Users", icon: Users },
-  { to: "/activity-logs", label: "Activity Logs", icon: ListChecks, adminOnly: true },
-  { to: "/settings", label: "Settings", icon: Settings },
-]
+    { to: "/", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/users", label: "Users", icon: Users },
+    { to: "/activity-logs", label: "Activity Logs", icon: ListChecks, adminOnly: true },
+    { to: "/settings", label: "Settings", icon: Settings },
+  ]
 
 export function DashboardLayout() {
   const location = useLocation()
@@ -46,16 +45,15 @@ export function DashboardLayout() {
     <AuthGuard>
       <SidebarProvider>
         <Sidebar>
-          <SidebarHeader className="border-b border-sidebar-border">
-            <span className="font-semibold text-sidebar-foreground px-2">
-              Admin
+          <SidebarHeader>
+            <span className="font-semibold text-sidebar-foreground px-2 text-2xl">
+              Atlas
             </span>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>Navigation</SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu>
+                <SidebarMenu className="space-y-2">
                   {navItems.map(({ to, label, icon: Icon, adminOnly }) => {
                     if (adminOnly && !me?.roles?.includes("admin")) return null
                     return (
