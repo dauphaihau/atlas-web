@@ -5,7 +5,7 @@ import { ActivityLogsTable } from "./ActivityLogsTable"
 
 export function ActivityLogsContent() {
   const { data: me } = useMeQuery()
-  const isAdmin = (me?.role ?? null) === "admin"
+  const isAdmin = me?.roles?.includes("admin") ?? false
 
   if (!isAdmin) {
     return <ActivityLogsPermissionDenied />
