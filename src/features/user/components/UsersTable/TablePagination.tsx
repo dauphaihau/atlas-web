@@ -4,7 +4,7 @@ import {
   PaginationItem,
   PaginationNext,
   PaginationPrevious,
-} from "@/shared/ui/pagination"
+} from "@atlas/ui/pagination"
 
 export const PER_PAGE_OPTIONS = [10, 15, 25, 50] as const
 

@@ -1,5 +1,5 @@
 import { useRef } from "react"
-import { Button } from "@/shared/ui/button"
+import { Button } from "@atlas/ui/button"
 import type { UserDto } from "@/shared/api/user"
 import { User as UserIcon } from "lucide-react"
 

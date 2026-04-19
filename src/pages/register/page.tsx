@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Button } from "@/shared/ui/button"
-import { Input } from "@/shared/ui/input"
+import { Button } from "@atlas/ui/button"
+import { Input } from "@atlas/ui/input"
 import { useRegisterMutation } from "@/shared/queries/auth"
 
 export function RegisterPage() {

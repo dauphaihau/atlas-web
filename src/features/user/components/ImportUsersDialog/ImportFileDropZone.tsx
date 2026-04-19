@@ -5,7 +5,7 @@ import {
   Field,
   FieldDescription,
   FieldLabel,
-} from "@/shared/ui/field"
+} from "@atlas/ui/field"
 import { cn } from "@/shared/lib/utils"
 import { FileUp } from "lucide-react"
 

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Link, Navigate, useNavigate } from "react-router-dom"
-import { Button } from "@/shared/ui/button"
-import { Input } from "@/shared/ui/input"
+import { Button } from "@atlas/ui/button"
+import { Input } from "@atlas/ui/input"
 import { useLoginMutation, useMeQuery } from "@/shared/queries/auth"
 
 export function LoginPage() {

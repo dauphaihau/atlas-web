@@ -9,8 +9,8 @@ import {
 } from "@/shared/queries/user"
 import { useDebouncedValue } from "@/shared/hooks/use-debounced-value"
 import type { UserDto } from "@/shared/api/user"
-import { Input } from "@/shared/ui/input"
-import { Skeleton } from "@/shared/ui/skeleton"
+import { Input } from "@atlas/ui/input"
+import { Skeleton } from "@atlas/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -18,11 +18,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/table"
-import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs"
+} from "@atlas/ui/table"
+import { Tabs, TabsList, TabsTrigger } from "@atlas/ui/tabs"
 import { AvatarCell } from "./AvatarCell"
 import { TablePagination, PER_PAGE_OPTIONS } from "./TablePagination"
-import { Button } from "@/shared/ui/button"
+import { Button } from "@atlas/ui/button"
 import {
   XIcon,
   MoreVerticalIcon,
@@ -35,7 +35,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/shared/ui/dropdown-menu"
+} from "@atlas/ui/dropdown-menu"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,7 +45,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/shared/ui/alert-dialog"
+} from "@atlas/ui/alert-dialog"
 
 const SEARCH_DEBOUNCE_MS = 300
 

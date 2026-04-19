@@ -1,7 +1,7 @@
 "use client"
 
-import { Button } from "@/shared/ui/button"
-import { Progress } from "@/shared/ui/progress"
+import { Button } from "@atlas/ui/button"
+import { Progress } from "@atlas/ui/progress"
 import { formatFileSize } from "@/shared/utils/format-file-size"
 import { FileUp, X } from "lucide-react"
 

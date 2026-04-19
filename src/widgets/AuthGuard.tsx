@@ -1,7 +1,7 @@
 import { type ReactNode } from "react"
 import { Navigate } from "react-router-dom"
 import { useMeQuery } from "@/shared/queries/auth"
-import { Skeleton } from "@/shared/ui/skeleton"
+import { Skeleton } from "@atlas/ui/skeleton"
 
 interface AuthGuardProps {
   children: ReactNode

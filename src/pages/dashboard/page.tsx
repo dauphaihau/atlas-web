@@ -1,4 +1,4 @@
-import { Button } from "@/shared/ui/button"
+import { Button } from "@atlas/ui/button"
 
 export function DashboardPage() {
   return (

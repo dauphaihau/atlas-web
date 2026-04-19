@@ -12,8 +12,8 @@ import {
 import { useImportProgressStore } from "@/shared/store/import-progress.store"
 import { formatFileSize } from "@/shared/utils/format-file-size"
 import { cn } from "@/shared/lib/utils"
-import { Button } from "@/shared/ui/button"
-import { Progress } from "@/shared/ui/progress"
+import { Button } from "@atlas/ui/button"
+import { Progress } from "@atlas/ui/progress"
 import { isEchoConfigured, subscribeToImport } from "@/shared/lib/echo"
 
 export function ImportProgressCard() {

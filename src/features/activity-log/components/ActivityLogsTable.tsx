@@ -7,10 +7,10 @@ import {
   PaginationItem,
   PaginationNext,
   PaginationPrevious,
-} from "@/shared/ui/pagination"
-import { Input } from "@/shared/ui/input"
-import { Button } from "@/shared/ui/button"
-import { Skeleton } from "@/shared/ui/skeleton"
+} from "@atlas/ui/pagination"
+import { Input } from "@atlas/ui/input"
+import { Button } from "@atlas/ui/button"
+import { Skeleton } from "@atlas/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -18,7 +18,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/ui/table"
+} from "@atlas/ui/table"
 import { X } from "lucide-react"
 import { formatIsoDate } from "../utils/format-iso-date"
 

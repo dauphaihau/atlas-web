@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
-import { Button } from "@/shared/ui/button"
+import { Button } from "@atlas/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -11,15 +11,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/ui/dialog"
+} from "@atlas/ui/dialog"
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/shared/ui/field"
-import { Input } from "@/shared/ui/input"
+} from "@atlas/ui/field"
+import { Input } from "@atlas/ui/input"
 import { useCreateUserMutation } from "@/shared/queries/user"
 import { Plus } from "lucide-react"
 import { useState } from "react"
