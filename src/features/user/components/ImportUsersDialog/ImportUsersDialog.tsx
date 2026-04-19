@@ -8,9 +8,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/ui/dialog"
-import { FieldError, FieldGroup } from "@/shared/ui/field"
-import { Button } from "@/shared/ui/button"
+} from "@atlas/ui/dialog"
+import { FieldError, FieldGroup } from "@atlas/ui/field"
+import { Button } from "@atlas/ui/button"
 import {
   useCancelImportMutation,
   useImportUsersMutation,
@@ -21,12 +21,16 @@ import {
   userKeys,
   importStatusFromProgress,
   importStatusFromCompleted,
+  subscribeToImport,
 } from "@/shared/api/user"
-import { isEchoConfigured, subscribeToImport } from "@/shared/lib/echo"
+import { isEchoConfigured } from "@/shared/lib/echo"
+import logger from "@/shared/lib/logger"
 import { useImportProgressStore } from "@/shared/store/import-progress.store"
 import { FileUp } from "lucide-react"
 import { ImportFileDropZone } from "./ImportFileDropZone"
 import { ImportFileCard } from "./ImportFileCard"
+
+const log = logger("import-users-dialog")
 
 const ACCEPTED_TYPES = ".csv,.txt,.xlsx,.xls"
 const ACCEPTED_LABEL = "CSV, XLSX or XLS files."
@@ -83,6 +87,10 @@ export function ImportUsersDialog() {
   useEffect(() => {
     if (submittedImportId == null || !echoConfigured) return
     const importId = submittedImportId
+    log.debug("subscribing to import channel", {
+      importId,
+      channel: `imports.${importId}`,
+    })
     const unsubscribe = subscribeToImport(importId, {
       onProgress: (payload) => {
         queryClient.setQueryData(userKeys.importStatus(importId), (old: { progress_percentage?: number } | undefined) => {

@@ -2,7 +2,7 @@ import type { ImportStatusDto } from "./dto"
 import type {
   ImportCompletedPayload,
   ImportProgressPayload,
-} from "@/shared/lib/echo"
+} from "./import-events"
 
 /**
  * Maps ImportProgressUpdated broadcast payload to ImportStatusDto-like object

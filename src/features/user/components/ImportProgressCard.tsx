@@ -8,13 +8,14 @@ import {
   userKeys,
   importStatusFromProgress,
   importStatusFromCompleted,
+  subscribeToImport,
 } from "@/shared/api/user"
 import { useImportProgressStore } from "@/shared/store/import-progress.store"
 import { formatFileSize } from "@/shared/utils/format-file-size"
 import { cn } from "@/shared/lib/utils"
 import { Button } from "@atlas/ui/button"
 import { Progress } from "@atlas/ui/progress"
-import { isEchoConfigured, subscribeToImport } from "@/shared/lib/echo"
+import { isEchoConfigured } from "@/shared/lib/echo"
 
 export function ImportProgressCard() {
   const activeImport = useImportProgressStore((s) => s.activeImport)
