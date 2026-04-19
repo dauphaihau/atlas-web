@@ -7,7 +7,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@atlas/ui": ["../../packages/ui/src/index.ts"],
+      "@atlas/ui/*": ["../../packages/ui/src/*"]
     }
   }
 }
