@@ -8,6 +8,8 @@ export interface UserDto {
   roles?: string[]
   /** @deprecated Use roles instead. */
   role?: string | null
+  /** Tenant ID for non–super-admins; null for super_admin. Sent as X-Tenant-ID on requests. */
+  tenant_id?: number | null
   created_at: string | null
   deleted_at?: string | null
 }

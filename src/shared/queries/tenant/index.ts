@@ -1,0 +1,5 @@
+export { useTenantsQuery } from "./get-tenants.query"
+export { useTenantQuery } from "./get-tenant.query"
+export { useCreateTenantMutation } from "./create-tenant.mutation"
+export { useUpdateTenantMutation } from "./update-tenant.mutation"
+export { useDeleteTenantMutation } from "./delete-tenant.mutation"

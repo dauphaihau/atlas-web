@@ -1,3 +1,5 @@
+import { getCurrentTenantId } from "@/shared/lib/tenant-context"
+
 const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "")
 const API_PREFIX = "/api/v1"
 
@@ -100,6 +102,11 @@ function buildHeaders(init: RequestInit, body: string | FormData | undefined): H
     } catch {
       headers.set("X-XSRF-TOKEN", xsrf)
     }
+  }
+  // Non–super-admin: include tenant id so backend can scope requests
+  const tenantId = getCurrentTenantId()
+  if (tenantId != null) {
+    headers.set("X-Tenant-ID", String(tenantId))
   }
   return headers
 }

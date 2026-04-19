@@ -11,10 +11,10 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-} from "@/shared/ui/sidebar"
-import { Button } from "@/shared/ui/button"
+} from "@atlas/ui/sidebar"
+import { Button } from "@atlas/ui/button"
 import { ImportProgressCard } from "@/features/user"
-import { LayoutDashboard, ListChecks, LogOut, Settings, Users } from "lucide-react"
+import { Building2, LayoutDashboard, ListChecks, LogOut, Settings, Users } from "lucide-react"
 import { AuthGuard } from "@/widgets/AuthGuard"
 import { useImportProgressStore } from "@/shared/store/import-progress.store"
 import { useMeQuery } from "@/shared/queries/auth"
@@ -25,9 +25,11 @@ const navItems: Array<{
   label: string
   icon: typeof LayoutDashboard
   adminOnly?: boolean
+  superAdminOnly?: boolean
 }> = [
     { to: "/", label: "Dashboard", icon: LayoutDashboard },
     { to: "/users", label: "Users", icon: Users },
+    { to: "/tenants", label: "Tenants", icon: Building2, superAdminOnly: true },
     { to: "/activity-logs", label: "Activity Logs", icon: ListChecks, adminOnly: true },
     { to: "/settings", label: "Settings", icon: Settings },
   ]
@@ -54,8 +56,9 @@ export function DashboardLayout() {
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-2">
-                  {navItems.map(({ to, label, icon: Icon, adminOnly }) => {
+                  {navItems.map(({ to, label, icon: Icon, adminOnly, superAdminOnly }) => {
                     if (adminOnly && !me?.roles?.includes("admin")) return null
+                    if (superAdminOnly && !me?.roles?.includes("super_admin")) return null
                     return (
                       <SidebarMenuItem key={to}>
                         <SidebarMenuButton
