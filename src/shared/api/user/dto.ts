@@ -48,6 +48,18 @@ export interface ListUsersResponseDto {
   }
 }
 
+/** GET /v1/users/export query params. */
+export type ExportUsersField = "id" | "name" | "email" | "roles" | "created_at"
+
+export interface ExportUsersParams {
+  /** ISO date string (YYYY-MM-DD). No filter when omitted. */
+  date_from?: string
+  /** ISO date string (YYYY-MM-DD). No filter when omitted. */
+  date_to?: string
+  /** Subset of columns to include. All columns when omitted. */
+  fields?: ExportUsersField[]
+}
+
 /** GET /v1/users/export response (download URL for CSV). */
 export interface ExportUsersResponseDto {
   path: string

@@ -1,5 +1,6 @@
 import type {
   CreateUserRequestDto,
+  ExportUsersParams,
   ExportUsersResponseDto,
   ImportStatusDto,
   ImportUsersResponseDto,
@@ -19,6 +20,19 @@ function buildListUsersUrl(params?: ListUsersParams): string {
   if (params.search !== undefined && params.search !== "")
     searchParams.set("search", params.search)
   if (params.trashed !== undefined) searchParams.set("trashed", params.trashed)
+  const qs = searchParams.toString()
+  return qs ? `${base}?${qs}` : base
+}
+
+function buildExportUsersUrl(params?: ExportUsersParams): string {
+  const base = "/api/v1/users/export"
+  if (!params) return base
+  const searchParams = new URLSearchParams()
+  if (params.date_from) searchParams.set("date_from", params.date_from)
+  if (params.date_to) searchParams.set("date_to", params.date_to)
+  if (params.fields && params.fields.length > 0) {
+    params.fields.forEach((f) => searchParams.append("fields[]", f))
+  }
   const qs = searchParams.toString()
   return qs ? `${base}?${qs}` : base
 }
@@ -70,9 +84,9 @@ export const userApi = {
   },
 
   /** Request users CSV export; returns signed download URL. */
-  exportUsers(): Promise<ExportUsersResponseDto> {
+  exportUsers(params?: ExportUsersParams): Promise<ExportUsersResponseDto> {
     return api
-      .get<ApiResponseWrapper<ExportUsersResponseDto>>("/api/v1/users/export")
+      .get<ApiResponseWrapper<ExportUsersResponseDto>>(buildExportUsersUrl(params))
       .then(unwrapData)
   },
 
