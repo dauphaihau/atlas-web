@@ -3,7 +3,7 @@
 import { Button } from "@atlas/ui/button"
 import { Progress } from "@atlas/ui/progress"
 import { formatFileSize } from "@/shared/utils/format-file-size"
-import { FileUp, X } from "lucide-react"
+import { FileUpIcon, XIcon } from "lucide-react"
 
 export interface ImportFileCardProps {
   file: File
@@ -36,7 +36,7 @@ export function ImportFileCard({
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 flex-1 items-start gap-2">
           <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
-            <FileUp className="size-4" aria-hidden />
+            <FileUpIcon className="size-4" aria-hidden />
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-foreground">
@@ -56,7 +56,7 @@ export function ImportFileCard({
           aria-label="Remove selected file"
           className="shrink-0"
         >
-          <X className="size-3" />
+          <XIcon className="size-3" />
         </Button>
       </div>
 

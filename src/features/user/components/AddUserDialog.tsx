@@ -21,7 +21,7 @@ import {
 } from "@atlas/ui/field"
 import { Input } from "@atlas/ui/input"
 import { useCreateUserMutation } from "@/shared/queries/user"
-import { Plus } from "lucide-react"
+import { PlusIcon } from "lucide-react"
 import { useState } from "react"
 
 type ApiError = { message?: string; body?: { message?: string | string[] } }
@@ -80,7 +80,7 @@ export function AddUserDialog() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <Button size="sm" type="button" onClick={() => setOpen(true)}>
-        <Plus className="size-4" />
+        <PlusIcon className="size-4" />
         Add user
       </Button>
       <DialogContent className="max-w-sm">

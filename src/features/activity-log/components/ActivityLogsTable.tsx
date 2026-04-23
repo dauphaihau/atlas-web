@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@atlas/ui/table"
-import { X } from "lucide-react"
+import { XIcon } from "lucide-react"
 import { formatIsoDate } from "../utils/format-iso-date"
 
 const DEFAULT_PER_PAGE = 15
@@ -107,7 +107,7 @@ export function ActivityLogsTable() {
             }}
             aria-label="Clear search"
           >
-            <X className="size-4" />
+            <XIcon className="size-4" />
             Clear
           </Button>
         )}

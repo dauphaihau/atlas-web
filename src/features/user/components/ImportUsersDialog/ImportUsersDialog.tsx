@@ -26,7 +26,7 @@ import {
 import { isEchoConfigured } from "@/shared/lib/echo"
 import logger from "@/shared/lib/logger"
 import { useImportProgressStore } from "@/shared/store/import-progress.store"
-import { Download, FileUp } from "lucide-react"
+import { DownloadIcon, FileUpIcon } from "lucide-react"
 import { ImportFileDropZone } from "./ImportFileDropZone"
 import { ImportFileCard } from "./ImportFileCard"
 
@@ -222,7 +222,7 @@ export function ImportUsersDialog() {
         size="sm"
         onClick={() => setOpen(true)}
       >
-        <FileUp className="size-4" />
+        <FileUpIcon className="size-4" />
         Import CSV
       </Button>
       <DialogContent
@@ -258,7 +258,7 @@ export function ImportUsersDialog() {
               disabled={isImportInProgress || isDownloadingTemplate}
               className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit disabled:pointer-events-none disabled:opacity-50"
             >
-              <Download className="size-3.5" />
+              <DownloadIcon className="size-3.5" />
               {isDownloadingTemplate ? "Downloading…" : "Download CSV template"}
             </button>
 

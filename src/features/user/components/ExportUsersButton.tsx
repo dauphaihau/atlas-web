@@ -12,7 +12,7 @@ import {
 } from "@atlas/ui/dialog"
 import { useExportUsersMutation } from "@/shared/queries/user"
 import type { ExportUsersField } from "@/shared/api/user/dto"
-import { Download } from "lucide-react"
+import { DownloadIcon } from "lucide-react"
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -232,7 +232,7 @@ export function ExportUsersButton() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
-        <Download className="size-4" />
+        <DownloadIcon className="size-4" />
         Export CSV
       </Button>
 

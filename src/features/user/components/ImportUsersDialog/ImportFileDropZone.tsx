@@ -7,7 +7,7 @@ import {
   FieldLabel,
 } from "@atlas/ui/field"
 import { cn } from "@/shared/lib/utils"
-import { FileUp } from "lucide-react"
+import { FileUpIcon } from "lucide-react"
 
 export interface ImportFileDropZoneProps {
   id: string
@@ -85,7 +85,7 @@ export function ImportFileDropZone({
             : "border-muted-foreground/25 bg-muted/30 hover:bg-muted/50"
         )}
       >
-        <FileUp className="size-10 text-muted-foreground" aria-hidden />
+        <FileUpIcon className="size-10 text-muted-foreground" aria-hidden />
         <p className="text-center text-sm text-muted-foreground">
           Drag and drop or{" "}
           <span className="font-medium text-foreground">choose file</span> to

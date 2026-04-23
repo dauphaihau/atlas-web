@@ -14,7 +14,14 @@ import {
 } from "@atlas/ui/sidebar"
 import { Button } from "@atlas/ui/button"
 import { ImportProgressCard } from "@/features/user"
-import { Building2, LayoutDashboard, ListChecks, LogOut, Settings, Users } from "lucide-react"
+import {
+  Building2Icon,
+  LayoutDashboardIcon,
+  ListChecksIcon,
+  LogOutIcon,
+  SettingsIcon,
+  UsersIcon,
+} from "lucide-react"
 import { AuthGuard } from "@/widgets/AuthGuard"
 import { useImportProgressStore } from "@/shared/store/import-progress.store"
 import { useMeQuery } from "@/shared/queries/auth"
@@ -23,15 +30,15 @@ import { useLogoutMutation } from "@/shared/queries/auth"
 const navItems: Array<{
   to: string
   label: string
-  icon: typeof LayoutDashboard
+  icon: typeof LayoutDashboardIcon
   adminOnly?: boolean
   superAdminOnly?: boolean
 }> = [
-    { to: "/", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/users", label: "Users", icon: Users },
-    { to: "/tenants", label: "Tenants", icon: Building2, superAdminOnly: true },
-    { to: "/activity-logs", label: "Activity Logs", icon: ListChecks, adminOnly: true },
-    { to: "/settings", label: "Settings", icon: Settings },
+    { to: "/", label: "Dashboard", icon: LayoutDashboardIcon },
+    { to: "/users", label: "Users", icon: UsersIcon },
+    { to: "/tenants", label: "Tenants", icon: Building2Icon, superAdminOnly: true },
+    { to: "/activity-logs", label: "Activity Logs", icon: ListChecksIcon, adminOnly: true },
+    { to: "/settings", label: "Settings", icon: SettingsIcon },
   ]
 
 export function DashboardLayout() {
@@ -100,7 +107,7 @@ export function DashboardLayout() {
                 onClick={() => logout.mutate(undefined, { onSuccess: () => navigate("/login", { replace: true }) })}
                 disabled={logout.isPending}
               >
-                <LogOut className="size-4" />
+                <LogOutIcon className="size-4" />
                 <span className="sr-only">Log out</span>
               </Button>
             </div>
