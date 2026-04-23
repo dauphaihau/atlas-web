@@ -9,7 +9,8 @@ import type {
   UserDto,
   UserStatsDto,
 } from "./dto"
-import { api, type ApiResponseWrapper, unwrapData } from "@/shared/lib/api-client"
+import { api, type ApiResponseWrapper, unwrapData, getApiUrl, getCookie } from "@/shared/lib/api-client"
+import { getCurrentTenantId } from "@/shared/lib/tenant-context"
 
 function buildListUsersUrl(params?: ListUsersParams): string {
   const base = "/api/v1/users"
@@ -110,5 +111,29 @@ export const userApi = {
   /** Permanently delete a user. Cannot be undone. */
   forceDeleteUser(id: number): Promise<void> {
     return api.delete(`/api/v1/users/${id}/force`).then(() => undefined)
+  },
+
+  /** Download blank CSV template for user import. Triggers a browser file download. */
+  async downloadImportTemplate(): Promise<void> {
+    const url = getApiUrl("/api/v1/users/import/template")
+    const headers = new Headers({ Accept: "text/csv" })
+    const xsrf = getCookie("XSRF-TOKEN")
+    if (xsrf) {
+      try { headers.set("X-XSRF-TOKEN", decodeURIComponent(xsrf)) }
+      catch { headers.set("X-XSRF-TOKEN", xsrf) }
+    }
+    const tenantId = getCurrentTenantId()
+    if (tenantId != null) headers.set("X-Tenant-ID", String(tenantId))
+
+    const res = await fetch(url, { method: "GET", headers, credentials: "include" })
+    if (!res.ok) throw new Error(`Failed to download template: ${res.statusText}`)
+
+    const blob = await res.blob()
+    const blobUrl = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = blobUrl
+    a.download = "users-import-template.csv"
+    a.click()
+    URL.revokeObjectURL(blobUrl)
   },
 }

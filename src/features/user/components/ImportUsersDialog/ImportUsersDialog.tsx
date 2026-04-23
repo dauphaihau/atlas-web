@@ -26,7 +26,7 @@ import {
 import { isEchoConfigured } from "@/shared/lib/echo"
 import logger from "@/shared/lib/logger"
 import { useImportProgressStore } from "@/shared/store/import-progress.store"
-import { FileUp } from "lucide-react"
+import { Download, FileUp } from "lucide-react"
 import { ImportFileDropZone } from "./ImportFileDropZone"
 import { ImportFileCard } from "./ImportFileCard"
 
@@ -55,9 +55,8 @@ export function ImportUsersDialog() {
   const [open, setOpen] = useState(false)
   const [importFile, setImportFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState<string | null>(null)
-  const [submittedImportId, setSubmittedImportId] = useState<number | null>(
-    null
-  )
+  const [submittedImportId, setSubmittedImportId] = useState<number | null>(null)
+  const [isDownloadingTemplate, setIsDownloadingTemplate] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
   const echoConfigured = isEchoConfigured()
@@ -193,6 +192,15 @@ export function ImportUsersDialog() {
     }
   }
 
+  async function handleDownloadTemplate() {
+    setIsDownloadingTemplate(true)
+    try {
+      await userApi.downloadImportTemplate()
+    } finally {
+      setIsDownloadingTemplate(false)
+    }
+  }
+
   function handleRemoveFile() {
     if (submittedImportId != null) {
       cancelImport.mutate(submittedImportId, {
@@ -243,6 +251,16 @@ export function ImportUsersDialog() {
               onFileChange={setFile}
               inputRef={inputRef}
             />
+
+            <button
+              type="button"
+              onClick={handleDownloadTemplate}
+              disabled={isImportInProgress || isDownloadingTemplate}
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit disabled:pointer-events-none disabled:opacity-50"
+            >
+              <Download className="size-3.5" />
+              {isDownloadingTemplate ? "Downloading…" : "Download CSV template"}
+            </button>
 
             {importFile != null && (
               <>
