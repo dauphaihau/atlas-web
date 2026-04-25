@@ -23,6 +23,7 @@ import {
   importStatusFromCompleted,
   subscribeToImport
 } from '@/shared/api/user';
+import type { ImportStatusDto } from '@/shared/api/user';
 import { isEchoConfigured } from '@/shared/lib/echo';
 import logger from '@/shared/lib/logger';
 import { useImportProgressStore } from '@/shared/store/import-progress.store';
@@ -78,8 +79,8 @@ export function ImportUsersDialog() {
     refetchInterval: echoConfigured
       ? false
       : (query) => {
-        const s = query.state.data?.status;
-        return s === 'pending' || s === 'processing' ? 2000 : false;
+        const queryStatus = query.state.data?.status;
+        return queryStatus === 'pending' || queryStatus === 'processing' ? 2000 : false;
       },
   });
 
@@ -92,7 +93,7 @@ export function ImportUsersDialog() {
     });
     const unsubscribe = subscribeToImport(importId, {
       onProgress: (payload) => {
-        queryClient.setQueryData(userKeys.importStatus(importId), (old: { progress_percentage?: number } | undefined) => {
+        queryClient.setQueryData(userKeys.importStatus(importId), (old: ImportStatusDto | undefined) => {
           const next = importStatusFromProgress(importId, payload);
           const incoming = payload?.progressPercentage;
           const current: number = old != null && Number.isFinite(old.progress_percentage) ? (old.progress_percentage as number) : -1;
@@ -134,8 +135,8 @@ export function ImportUsersDialog() {
     setFileError(file ? validateFile(file) : null);
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     if (!importFile) return;
     const err = validateFile(importFile);
     if (err) {
@@ -144,8 +145,8 @@ export function ImportUsersDialog() {
     }
     setFileError(null);
     importUsers.mutate(importFile, {
-      onSuccess: (data) => {
-        setSubmittedImportId(data.id);
+      onSuccess: (importResponse) => {
+        setSubmittedImportId(importResponse.id);
       },
     });
   };
@@ -158,12 +159,12 @@ export function ImportUsersDialog() {
       : null;
 
   const isImportInProgress =
-    isPending ||
-    (submittedImportId != null && status?.status !== 'completed');
+    isPending
+    || (submittedImportId != null && status?.status !== 'completed');
   const canSubmitWhenIdle = Boolean(importFile) && !fileError;
 
   const setHideProgressCardInLayout = useImportProgressStore(
-    (s) => s.setHideProgressCardInLayout
+    (state) => state.setHideProgressCardInLayout
   );
   useEffect(() => {
     setHideProgressCardInLayout(open && isImportInProgress);

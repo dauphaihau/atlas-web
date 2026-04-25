@@ -10,6 +10,7 @@ import {
   importStatusFromCompleted,
   subscribeToImport
 } from '@/shared/api/user';
+import type { ImportStatusDto } from '@/shared/api/user';
 import { useImportProgressStore } from '@/shared/store/import-progress.store';
 import { formatFileSize } from '@/shared/utils/format-file-size';
 import { cn } from '@/shared/lib/utils';
@@ -18,8 +19,8 @@ import { Progress } from '@atlas/ui/progress';
 import { isEchoConfigured } from '@/shared/lib/echo';
 
 export function ImportProgressCard() {
-  const activeImport = useImportProgressStore((s) => s.activeImport);
-  const clearActiveImport = useImportProgressStore((s) => s.clearActiveImport);
+  const activeImport = useImportProgressStore((state) => state.activeImport);
+  const clearActiveImport = useImportProgressStore((state) => state.clearActiveImport);
   const queryClient = useQueryClient();
   const echoConfigured = isEchoConfigured();
 
@@ -37,8 +38,8 @@ export function ImportProgressCard() {
     refetchInterval: echoConfigured
       ? false
       : (query) => {
-        const s = query.state.data?.status;
-        return s === 'pending' || s === 'processing' ? 2000 : false;
+        const queryStatus = query.state.data?.status;
+        return queryStatus === 'pending' || queryStatus === 'processing' ? 2000 : false;
       },
   });
 
@@ -48,7 +49,7 @@ export function ImportProgressCard() {
     const importId = activeImport.id;
     const unsubscribe = subscribeToImport(importId, {
       onProgress: (payload) => {
-        queryClient.setQueryData(userKeys.importStatus(importId), (old: { progress_percentage?: number } | undefined) => {
+        queryClient.setQueryData(userKeys.importStatus(importId), (old: ImportStatusDto | undefined) => {
           const next = importStatusFromProgress(importId, payload);
           const incoming = payload?.progressPercentage;
           const current: number = old != null && Number.isFinite(old.progress_percentage) ? (old.progress_percentage as number) : -1;
