@@ -5,7 +5,7 @@ export function useCancelImportMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => userApi.cancelImport(id),
-    onSuccess: (_, id) => {
+    onSuccess: (_result, id) => {
       queryClient.invalidateQueries({ queryKey: userKeys.importStatus(id) });
       queryClient.invalidateQueries({ queryKey: userKeys.all });
     },

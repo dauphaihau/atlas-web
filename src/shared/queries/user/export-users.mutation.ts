@@ -15,9 +15,9 @@ function getDownloadUrl(url: string): string {
 export function useExportUsersMutation() {
   return useMutation({
     mutationFn: (params?: ExportUsersParams) => userApi.exportUsers(params),
-    onSuccess: (data) => {
-      if (!data?.url) return;
-      const fullUrl = getDownloadUrl(data.url);
+    onSuccess: (exportResponse) => {
+      if (!exportResponse?.url) return;
+      const fullUrl = getDownloadUrl(exportResponse.url);
       window.open(fullUrl, '_blank', 'noopener,noreferrer');
     },
   });

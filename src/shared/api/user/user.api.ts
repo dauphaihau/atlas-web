@@ -34,7 +34,7 @@ function buildExportUsersUrl(params?: ExportUsersParams): string {
   if (params.date_from) searchParams.set('date_from', params.date_from);
   if (params.date_to) searchParams.set('date_to', params.date_to);
   if (params.fields && params.fields.length > 0) {
-    params.fields.forEach((f) => searchParams.append('fields[]', f));
+    params.fields.forEach((field) => searchParams.append('fields[]', field));
   }
   const qs = searchParams.toString();
   return qs ? `${base}?${qs}` : base;
@@ -134,10 +134,10 @@ export const userApi = {
 
     const blob = await res.blob();
     const blobUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = 'users-import-template.csv';
-    a.click();
+    const anchor = document.createElement('a');
+    anchor.href = blobUrl;
+    anchor.download = 'users-import-template.csv';
+    anchor.click();
     URL.revokeObjectURL(blobUrl);
   },
 };

@@ -11,10 +11,10 @@ export function AvatarCell({
   onUpload: (userId: number, file: File) => void
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file) onUpload(user.id, file);
-    e.target.value = '';
+    event.target.value = '';
   };
   return (
     <div className="flex items-center gap-2">

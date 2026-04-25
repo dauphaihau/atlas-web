@@ -6,8 +6,8 @@ export function useRegisterMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: RegisterRequestDto) => authApi.register(payload),
-    onSuccess: (data) => {
-      queryClient.setQueryData(authKeys.me(), data.user);
+    onSuccess: (registerResponse) => {
+      queryClient.setQueryData(authKeys.me(), registerResponse.user);
     },
   });
 }

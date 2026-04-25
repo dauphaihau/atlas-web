@@ -21,8 +21,8 @@ export function getApiPathPrefix(): string {
  * Full URL for an API path (path should start with /, e.g. /api/v1/me).
  */
 export function getApiUrl(path: string): string {
-  const p = path.startsWith('/') ? path : `${API_PREFIX}/${path.replace(/^\//, '')}`;
-  return API_BASE ? `${API_BASE}${p}` : p;
+  const normalizedPath = path.startsWith('/') ? path : `${API_PREFIX}/${path.replace(/^\//, '')}`;
+  return API_BASE ? `${API_BASE}${normalizedPath}` : normalizedPath;
 }
 
 /**

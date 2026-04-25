@@ -25,7 +25,7 @@ export function UsersFilterBar({
 }: UsersFilterBarProps) {
   return (
     <>
-      <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as UsersTab)}>
+      <Tabs value={activeTab} onValueChange={(value) => onTabChange(value as UsersTab)}>
         <TabsList variant="line">
           <TabsTrigger value="all">
             All
@@ -48,7 +48,7 @@ export function UsersFilterBar({
             type="search"
             placeholder="Search by name or email"
             value={searchInput}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={(event) => onSearchChange(event.target.value)}
             aria-label="Search by name or email"
             className="max-w-sm"
           />

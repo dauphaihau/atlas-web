@@ -63,8 +63,8 @@ export function AddUserDialog() {
   const createUser = useCreateUserMutation();
   const createError = getErrorMessage(createUser.error as ApiError | undefined);
 
-  const onSubmit = (data: AddUserFormValues) => {
-    createUser.mutate(data, {
+  const onSubmit = (formValues: AddUserFormValues) => {
+    createUser.mutate(formValues, {
       onSuccess: () => {
         setOpen(false);
         form.reset();

@@ -66,11 +66,11 @@ export function subscribeToImport(
   });
 
   // Laravel broadcastAs() event names are listened with a leading dot.
-  channel.listen('.import.progress', (e: ImportProgressPayload) => {
-    callbacks.onProgress(e);
+  channel.listen('.import.progress', (event: ImportProgressPayload) => {
+    callbacks.onProgress(event);
   });
-  channel.listen('.import.completed', (e: ImportCompletedPayload) => {
-    callbacks.onCompleted(e);
+  channel.listen('.import.completed', (event: ImportCompletedPayload) => {
+    callbacks.onCompleted(event);
   });
 
   return () => {

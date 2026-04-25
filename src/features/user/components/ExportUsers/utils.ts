@@ -8,10 +8,10 @@ export function getLocalTzLabel(): string {
   const offsetMin = -new Date().getTimezoneOffset();
   const sign = offsetMin >= 0 ? '+' : '-';
   const absMin = Math.abs(offsetMin);
-  const h = Math.floor(absMin / 60);
-  const m = absMin % 60;
-  const short = m === 0 ? `${sign}${h}` : `${sign}${h}:${String(m).padStart(2, '0')}`;
-  const long = `${sign}${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+  const hours = Math.floor(absMin / 60);
+  const minutes = absMin % 60;
+  const short = minutes === 0 ? `${sign}${hours}` : `${sign}${hours}:${String(minutes).padStart(2, '0')}`;
+  const long = `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
   return `GMT${short} (UTC${long})`;
 }
 
@@ -26,7 +26,7 @@ function getPartsInTz(
     timeZone: tzName,
   }).formatToParts(date);
   const get = (type: string) =>
-    parseInt(parts.find((p) => p.type === type)!.value, 10);
+    parseInt(parts.find((part) => part.type === type)!.value, 10);
   return { year: get('year'), month: get('month'), day: get('day') };
 }
 
@@ -35,8 +35,8 @@ function toIsoDate(year: number, month: number, day: number): string {
 }
 
 function formatDisplayDate(isoDate: string, tzName: string): string {
-  const [y, m, d] = isoDate.split('-').map(Number);
-  const date = new Date(y, m - 1, d, 12, 0, 0);
+  const [y, month, day] = isoDate.split('-').map(Number);
+  const date = new Date(y, month - 1, day, 12, 0, 0);
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
@@ -61,17 +61,17 @@ export function computePresetRange(
   }
 
   if (preset === 'last_7_days') {
-    const d = new Date(now);
-    d.setDate(d.getDate() - 6);
-    const p = getPartsInTz(d, tzName);
-    return { from: toIsoDate(p.year, p.month, p.day), to: today };
+    const pastDate = new Date(now);
+    pastDate.setDate(pastDate.getDate() - 6);
+    const rangeParts = getPartsInTz(pastDate, tzName);
+    return { from: toIsoDate(rangeParts.year, rangeParts.month, rangeParts.day), to: today };
   }
 
   if (preset === 'last_4_weeks') {
-    const d = new Date(now);
-    d.setDate(d.getDate() - 27);
-    const p = getPartsInTz(d, tzName);
-    return { from: toIsoDate(p.year, p.month, p.day), to: today };
+    const pastDate = new Date(now);
+    pastDate.setDate(pastDate.getDate() - 27);
+    const rangeParts = getPartsInTz(pastDate, tzName);
+    return { from: toIsoDate(rangeParts.year, rangeParts.month, rangeParts.day), to: today };
   }
 
   if (preset === 'last_month') {

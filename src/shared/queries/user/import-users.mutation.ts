@@ -6,9 +6,9 @@ export function useImportUsersMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (file: File) => userApi.importUsers(file),
-    onSuccess: (data, variables) => {
+    onSuccess: (importResponse, variables) => {
       useImportProgressStore.getState().setActiveImport({
-        id: data.id,
+        id: importResponse.id,
         fileName: variables.name,
         fileSize: variables.size,
       });

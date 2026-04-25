@@ -53,7 +53,7 @@ export function DashboardLayout() {
   const { data: me } = useMeQuery();
   const logout = useLogoutMutation();
   const hideProgressCardInLayout = useImportProgressStore(
-    (s) => s.hideProgressCardInLayout
+    (state) => state.hideProgressCardInLayout
   );
 
   return (
@@ -70,10 +70,11 @@ export function DashboardLayout() {
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-2">
                   {navItems.map(({
-                    to, label, icon: Icon, adminOnly, superAdminOnly, 
+                    to, label, icon, adminOnly, superAdminOnly,
                   }) => {
                     if (adminOnly && !me?.roles?.includes('admin')) return null;
                     if (superAdminOnly && !me?.roles?.includes('super_admin')) return null;
+                    const Icon = icon;
                     return (
                       <SidebarMenuItem key={to}>
                         <SidebarMenuButton

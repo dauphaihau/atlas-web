@@ -16,8 +16,8 @@ export function RegisterPage() {
     (Array.isArray(err?.body?.message) ? err.body.message.join(', ') : err?.body?.message) ??
     null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     if (!name.trim() || !email.trim() || !password) return;
     register.mutate(
       { name: name.trim(), email: email.trim(), password },
@@ -52,7 +52,7 @@ export function RegisterPage() {
               autoComplete="name"
               placeholder="Your name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(event) => setName(event.target.value)}
               disabled={register.isPending}
               required
               className="w-full"
@@ -68,7 +68,7 @@ export function RegisterPage() {
               autoComplete="email"
               placeholder="you@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(event) => setEmail(event.target.value)}
               disabled={register.isPending}
               required
               className="w-full"
@@ -84,7 +84,7 @@ export function RegisterPage() {
               autoComplete="new-password"
               placeholder="At least 8 characters"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(event) => setPassword(event.target.value)}
               disabled={register.isPending}
               required
               minLength={8}

@@ -105,9 +105,9 @@ export function EditTenantDialog({
     }
   }, [tenant, form]);
 
-  const onSubmit = (data: EditTenantFormValues) => {
+  const onSubmit = (formValues: EditTenantFormValues) => {
     if (tenant == null) return;
-    const settings = parseSettingsJson(data.settingsJson);
+    const settings = parseSettingsJson(formValues.settingsJson);
     if (settings === undefined) {
       form.setError('settingsJson', { message: 'Invalid JSON.' });
       return;
@@ -116,10 +116,10 @@ export function EditTenantDialog({
       {
         id: tenant.id,
         payload: {
-          name: data.name,
-          slug: data.slug,
+          name: formValues.name,
+          slug: formValues.slug,
           settings,
-          is_active: data.is_active,
+          is_active: formValues.is_active,
         },
       },
       {
@@ -225,7 +225,7 @@ export function EditTenantDialog({
                     <input
                       type="checkbox"
                       checked={field.value}
-                      onChange={(e) => field.onChange(e.target.checked)}
+                      onChange={(event) => field.onChange(event.target.checked)}
                       disabled={updateTenant.isPending}
                       className="size-4 rounded border-input"
                     />

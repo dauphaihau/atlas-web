@@ -148,7 +148,7 @@ export function ExportUsersDialog({ open, onOpenChange }: ExportUsersDialogProps
                   type="date"
                   value={customFrom}
                   max={customTo || undefined}
-                  onChange={(e) => setCustomFrom(e.target.value)}
+                  onChange={(event) => setCustomFrom(event.target.value)}
                   className="border-input bg-transparent text-foreground rounded-md border px-2 py-1 text-sm"
                 />
                 <span className="text-muted-foreground text-sm">–</span>
@@ -156,7 +156,7 @@ export function ExportUsersDialog({ open, onOpenChange }: ExportUsersDialogProps
                   type="date"
                   value={customTo}
                   min={customFrom || undefined}
-                  onChange={(e) => setCustomTo(e.target.value)}
+                  onChange={(event) => setCustomTo(event.target.value)}
                   className="border-input bg-transparent text-foreground rounded-md border px-2 py-1 text-sm"
                 />
               </div>

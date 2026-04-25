@@ -23,8 +23,8 @@ export function LoginPage() {
     (Array.isArray(err?.body?.message) ? err.body.message.join(', ') : err?.body?.message) ??
     null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     if (!email.trim() || !password) return;
     login.mutate(
       { email: email.trim(), password },
@@ -59,7 +59,7 @@ export function LoginPage() {
               autoComplete="email"
               placeholder="you@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(event) => setEmail(event.target.value)}
               disabled={login.isPending}
               required
               className="w-full"
@@ -74,7 +74,7 @@ export function LoginPage() {
               type="password"
               autoComplete="current-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(event) => setPassword(event.target.value)}
               disabled={login.isPending}
               required
               className="w-full"

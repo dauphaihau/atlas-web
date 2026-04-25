@@ -12,8 +12,8 @@ function readStored(): number | null {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
     if (raw == null || raw === '') return null;
-    const n = Number.parseInt(raw, 10);
-    return Number.isNaN(n) ? null : n;
+    const parsed = Number.parseInt(raw, 10);
+    return Number.isNaN(parsed) ? null : parsed;
   }
   catch {
     return null;

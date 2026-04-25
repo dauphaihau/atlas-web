@@ -73,14 +73,14 @@ export function UsersTable({ onEdit, onDelete }: UsersTableProps) {
   const from = total === 0 ? 0 : ((currentPage - 1) * (meta?.per_page ?? perPage)) + 1;
   const to = total === 0 ? 0 : Math.min(currentPage * (meta?.per_page ?? perPage), total);
 
-  const goToPrev = useCallback(() => setPage((p) => Math.max(1, p - 1)), []);
+  const goToPrev = useCallback(() => setPage((prev) => Math.max(1, prev - 1)), []);
   const goToNext = useCallback(
-    () => setPage((p) => Math.min(totalPages, p + 1)),
+    () => setPage((prev) => Math.min(totalPages, prev + 1)),
     [totalPages]
   );
 
-  const handlePerPageChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = Number(e.target.value);
+  const handlePerPageChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = Number(event.target.value);
     if (Number.isInteger(value) && (PER_PAGE_OPTIONS as readonly number[]).includes(value)) {
       setPerPage(value as typeof PER_PAGE_OPTIONS[number]);
       setPage(1);

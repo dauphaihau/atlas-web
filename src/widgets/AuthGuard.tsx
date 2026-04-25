@@ -13,7 +13,7 @@ interface AuthGuardProps {
  */
 export function AuthGuard({ children }: AuthGuardProps) {
   const {
-    data, isLoading, isError, error, 
+    data: me, isLoading, isError, error,
   } = useMeQuery({ enabled: true });
   const err = error as { status?: number } | undefined;
 
@@ -26,14 +26,14 @@ export function AuthGuard({ children }: AuthGuardProps) {
     );
   }
 
-  if (isError && (err?.status === 401 || !data)) {
+  if (isError && (err?.status === 401 || !me)) {
     // Do not call removeQueries here: it removes the query and triggers an immediate refetch
     // while AuthGuard is still mounted, causing an infinite 401 → refetch loop. Just redirect;
     // the query stays in error state (no retry on 401) and login mutation sets fresh data on success.
     return <Navigate to="/login" replace />;
   }
 
-  if (!data) {
+  if (!me) {
     return <Navigate to="/login" replace />;
   }
 

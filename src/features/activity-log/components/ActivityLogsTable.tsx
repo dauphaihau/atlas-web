@@ -51,15 +51,15 @@ export function ActivityLogsTable() {
     total === 0 ? 0 : Math.min(currentPage * (meta?.per_page ?? perPage), total);
 
   const goToPrev = useCallback(() => {
-    setPage((p) => Math.max(1, p - 1));
+    setPage((prev) => Math.max(1, prev - 1));
   }, []);
   const goToNext = useCallback(() => {
-    setPage((p) => Math.min(totalPages, p + 1));
+    setPage((prev) => Math.min(totalPages, prev + 1));
   }, [totalPages]);
 
   const handlePerPageChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const value = Number(e.target.value);
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = Number(event.target.value);
       if (Number.isInteger(value) && value >= 1 && value <= 100) {
         setPerPage(value);
         setPage(1);
@@ -88,8 +88,8 @@ export function ActivityLogsTable() {
             type="search"
             placeholder="Search event, subject, causer…"
             value={searchInput}
-            onChange={(e) => {
-              setSearchInput(e.target.value);
+            onChange={(event) => {
+              setSearchInput(event.target.value);
               setPage(1);
             }}
             aria-label="Search event, subject, causer"
@@ -190,9 +190,9 @@ export function ActivityLogsTable() {
                 className="h-8 rounded-md border border-input bg-background px-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 aria-label="Rows per page"
               >
-                {PER_PAGE_OPTIONS.map((n) => (
-                  <option key={n} value={n}>
-                    {n}
+                {PER_PAGE_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
                   </option>
                 ))}
               </select>

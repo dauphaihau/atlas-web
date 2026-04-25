@@ -6,8 +6,8 @@ export function useUpdateMyAvatarMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (file: File) => userApi.updateMyAvatar(file),
-    onSuccess: (data) => {
-      queryClient.setQueryData(authKeys.me(), data);
+    onSuccess: (updatedUser) => {
+      queryClient.setQueryData(authKeys.me(), updatedUser);
       queryClient.invalidateQueries({ queryKey: userKeys.all });
     },
   });

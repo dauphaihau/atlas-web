@@ -83,18 +83,18 @@ export function AddTenantDialog() {
   const createTenant = useCreateTenantMutation();
   const createError = getErrorMessage(createTenant.error as ApiError | undefined);
 
-  const onSubmit = (data: AddTenantFormValues) => {
-    const settings = parseSettingsJson(data.settingsJson);
+  const onSubmit = (formValues: AddTenantFormValues) => {
+    const settings = parseSettingsJson(formValues.settingsJson);
     if (settings === undefined) {
       form.setError('settingsJson', { message: 'Invalid JSON.' });
       return;
     }
     createTenant.mutate(
       {
-        name: data.name,
-        slug: data.slug,
+        name: formValues.name,
+        slug: formValues.slug,
         settings,
-        is_active: data.is_active,
+        is_active: formValues.is_active,
       },
       {
         onSuccess: () => {
@@ -204,7 +204,7 @@ export function AddTenantDialog() {
                     <input
                       type="checkbox"
                       checked={field.value}
-                      onChange={(e) => field.onChange(e.target.checked)}
+                      onChange={(event) => field.onChange(event.target.checked)}
                       disabled={createTenant.isPending}
                       className="size-4 rounded border-input"
                     />
