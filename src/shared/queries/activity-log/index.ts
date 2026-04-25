@@ -1,1 +1,1 @@
-export { useActivityLogsQuery } from "./get-activity-logs.query"
+export { useActivityLogsQuery } from './get-activity-logs.query';

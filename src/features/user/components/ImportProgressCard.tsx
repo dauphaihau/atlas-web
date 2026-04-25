@@ -1,27 +1,27 @@
-"use client"
+'use client';
 
-import { useEffect } from "react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { FileTextIcon, XIcon } from "lucide-react"
+import { useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { FileTextIcon, XIcon } from 'lucide-react';
 import {
   userApi,
   userKeys,
   importStatusFromProgress,
   importStatusFromCompleted,
-  subscribeToImport,
-} from "@/shared/api/user"
-import { useImportProgressStore } from "@/shared/store/import-progress.store"
-import { formatFileSize } from "@/shared/utils/format-file-size"
-import { cn } from "@/shared/lib/utils"
-import { Button } from "@atlas/ui/button"
-import { Progress } from "@atlas/ui/progress"
-import { isEchoConfigured } from "@/shared/lib/echo"
+  subscribeToImport
+} from '@/shared/api/user';
+import { useImportProgressStore } from '@/shared/store/import-progress.store';
+import { formatFileSize } from '@/shared/utils/format-file-size';
+import { cn } from '@/shared/lib/utils';
+import { Button } from '@atlas/ui/button';
+import { Progress } from '@atlas/ui/progress';
+import { isEchoConfigured } from '@/shared/lib/echo';
 
 export function ImportProgressCard() {
-  const activeImport = useImportProgressStore((s) => s.activeImport)
-  const clearActiveImport = useImportProgressStore((s) => s.clearActiveImport)
-  const queryClient = useQueryClient()
-  const echoConfigured = isEchoConfigured()
+  const activeImport = useImportProgressStore((s) => s.activeImport);
+  const clearActiveImport = useImportProgressStore((s) => s.clearActiveImport);
+  const queryClient = useQueryClient();
+  const echoConfigured = isEchoConfigured();
 
   const {
     data: status,
@@ -37,67 +37,67 @@ export function ImportProgressCard() {
     refetchInterval: echoConfigured
       ? false
       : (query) => {
-          const s = query.state.data?.status
-          return s === "pending" || s === "processing" ? 2000 : false
-        },
-  })
+        const s = query.state.data?.status;
+        return s === 'pending' || s === 'processing' ? 2000 : false;
+      },
+  });
 
   // Subscribe to WebSocket for real-time progress when Echo is configured
   useEffect(() => {
-    if (activeImport == null || !echoConfigured) return
-    const importId = activeImport.id
+    if (activeImport == null || !echoConfigured) return;
+    const importId = activeImport.id;
     const unsubscribe = subscribeToImport(importId, {
       onProgress: (payload) => {
         queryClient.setQueryData(userKeys.importStatus(importId), (old: { progress_percentage?: number } | undefined) => {
-          const next = importStatusFromProgress(importId, payload)
-          const incoming = payload?.progressPercentage
-          const current: number = old != null && Number.isFinite(old.progress_percentage) ? (old.progress_percentage as number) : -1
-          if (Number.isFinite(incoming) && incoming < current) return old
-          return next
-        })
+          const next = importStatusFromProgress(importId, payload);
+          const incoming = payload?.progressPercentage;
+          const current: number = old != null && Number.isFinite(old.progress_percentage) ? (old.progress_percentage as number) : -1;
+          if (Number.isFinite(incoming) && incoming < current) return old;
+          return next;
+        });
       },
       onCompleted: (payload) => {
         queryClient.setQueryData(
           userKeys.importStatus(importId),
           importStatusFromCompleted(importId, payload)
-        )
-        queryClient.invalidateQueries({ queryKey: userKeys.all })
+        );
+        queryClient.invalidateQueries({ queryKey: userKeys.all });
       },
-    })
-    return unsubscribe
-  }, [activeImport, echoConfigured, queryClient])
+    });
+    return unsubscribe;
+  }, [activeImport, echoConfigured, queryClient]);
 
   useEffect(() => {
-    if (status?.status === "completed") {
-      queryClient.invalidateQueries({ queryKey: userKeys.all })
+    if (status?.status === 'completed') {
+      queryClient.invalidateQueries({ queryKey: userKeys.all });
     }
-  }, [status?.status, queryClient])
+  }, [status?.status, queryClient]);
 
   // Auto-hide card 8s after progress reaches 100%
   useEffect(() => {
-    if (activeImport == null || status?.status !== "completed") return
+    if (activeImport == null || status?.status !== 'completed') return;
     const timeoutId = window.setTimeout(() => {
-      clearActiveImport()
-    }, 8000)
-    return () => window.clearTimeout(timeoutId)
-  }, [activeImport, status?.status, clearActiveImport])
+      clearActiveImport();
+    }, 8000);
+    return () => window.clearTimeout(timeoutId);
+  }, [activeImport, status?.status, clearActiveImport]);
 
-  if (activeImport == null) return null
+  if (activeImport == null) return null;
 
-  const displayName = activeImport.fileName.trim() || "Import"
+  const displayName = activeImport.fileName.trim() || 'Import';
   const displaySize =
     activeImport.fileSize != null && activeImport.fileSize >= 0
       ? formatFileSize(activeImport.fileSize)
-      : "—"
+      : '—';
   const percentage =
     status != null && Number.isFinite(status.progress_percentage)
       ? status.progress_percentage
-      : 0
+      : 0;
 
   return (
     <div
       className={cn(
-        "flex w-full max-w-sm flex-col gap-2 rounded-lg border border-border bg-card p-3 text-card-foreground shadow-sm"
+        'flex w-full max-w-sm flex-col gap-2 rounded-lg border border-border bg-card p-3 text-card-foreground shadow-sm'
       )}
       role="status"
       aria-live="polite"
@@ -133,7 +133,7 @@ export function ImportProgressCard() {
 
       {isError && (
         <p className="text-xs text-destructive" role="alert">
-          {error instanceof Error ? error.message : "Failed to load import status."}
+          {error instanceof Error ? error.message : 'Failed to load import status.'}
           <button
             type="button"
             onClick={() => refetch()}
@@ -152,12 +152,12 @@ export function ImportProgressCard() {
               {Math.round(percentage)}%
             </span>
           </div>
-          {status.status === "failed" && status.errors?.length > 0 && (
+          {status.status === 'failed' && status.errors?.length > 0 && (
             <p className="text-xs text-destructive" role="alert">
-              {status.errors[0]?.message ?? "Import failed."}
+              {status.errors[0]?.message ?? 'Import failed.'}
             </p>
           )}
-          {status.status === "completed" && (
+          {status.status === 'completed' && (
             <p className="text-xs text-muted-foreground">
               Completed. {status.created} created, {status.updated} updated.
             </p>
@@ -165,5 +165,5 @@ export function ImportProgressCard() {
         </>
       )}
     </div>
-  )
+  );
 }

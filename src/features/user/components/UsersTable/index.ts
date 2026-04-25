@@ -1,1 +1,1 @@
-export { UsersTable, type UsersTableProps } from "./UsersTable"
+export { UsersTable, type UsersTableProps } from './UsersTable';

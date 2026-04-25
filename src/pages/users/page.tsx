@@ -1,8 +1,8 @@
 import {
   UsersPageHeader,
   ExportUsersError,
-  UsersTable,
-} from "@/features/user"
+  UsersTable
+} from '@/features/user';
 
 export function UsersPage() {
   return (
@@ -13,5 +13,5 @@ export function UsersPage() {
         <UsersTable />
       </div>
     </div>
-  )
+  );
 }

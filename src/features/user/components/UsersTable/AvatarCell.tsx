@@ -1,7 +1,7 @@
-import { useRef } from "react"
-import { Button } from "@atlas/ui/button"
-import type { UserDto } from "@/shared/api/user"
-import { User as UserIcon } from "lucide-react"
+import { useRef } from 'react';
+import { Button } from '@atlas/ui/button';
+import type { UserDto } from '@/shared/api/user';
+import { User as UserIcon } from 'lucide-react';
 
 export function AvatarCell({
   user,
@@ -10,25 +10,27 @@ export function AvatarCell({
   user: UserDto
   onUpload: (userId: number, file: File) => void
 }) {
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) onUpload(user.id, file)
-    e.target.value = ""
-  }
+    const file = e.target.files?.[0];
+    if (file) onUpload(user.id, file);
+    e.target.value = '';
+  };
   return (
     <div className="flex items-center gap-2">
-      {user.avatar_url ? (
-        <img
-          src={user.avatar_url}
-          alt=""
-          className="size-8 rounded-full object-cover"
-        />
-      ) : (
-        <div className="flex size-8 items-center justify-center rounded-full bg-muted">
-          <UserIcon className="size-4 text-muted-foreground" />
-        </div>
-      )}
+      {user.avatar_url
+        ? (
+          <img
+            src={user.avatar_url}
+            alt=""
+            className="size-8 rounded-full object-cover"
+          />
+        )
+        : (
+          <div className="flex size-8 items-center justify-center rounded-full bg-muted">
+            <UserIcon className="size-4 text-muted-foreground" />
+          </div>
+        )}
       <input
         ref={inputRef}
         type="file"
@@ -45,5 +47,5 @@ export function AvatarCell({
         Upload
       </Button>
     </div>
-  )
+  );
 }

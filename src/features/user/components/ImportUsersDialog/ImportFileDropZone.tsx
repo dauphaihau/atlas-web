@@ -1,13 +1,13 @@
-"use client"
+'use client';
 
-import { useState } from "react"
+import { useState } from 'react';
 import {
   Field,
   FieldDescription,
-  FieldLabel,
-} from "@atlas/ui/field"
-import { cn } from "@/shared/lib/utils"
-import { FileUpIcon } from "lucide-react"
+  FieldLabel
+} from '@atlas/ui/field';
+import { cn } from '@/shared/lib/utils';
+import { FileUpIcon } from 'lucide-react';
 
 export interface ImportFileDropZoneProps {
   id: string
@@ -32,32 +32,32 @@ export function ImportFileDropZone({
   onFileChange,
   inputRef,
 }: ImportFileDropZoneProps) {
-  const [dragActive, setDragActive] = useState(false)
+  const [dragActive, setDragActive] = useState(false);
 
   function handleDrop(e: React.DragEvent) {
-    e.preventDefault()
-    setDragActive(false)
-    const file = e.dataTransfer.files?.[0]
-    if (file) onFileChange(file)
+    e.preventDefault();
+    setDragActive(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) onFileChange(file);
   }
 
   function handleDragOver(e: React.DragEvent) {
-    e.preventDefault()
-    setDragActive(true)
+    e.preventDefault();
+    setDragActive(true);
   }
 
   function handleDragLeave() {
-    setDragActive(false)
+    setDragActive(false);
   }
 
   function handleZoneClick() {
-    inputRef?.current?.click()
+    inputRef?.current?.click();
   }
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const chosen = e.target.files?.[0] ?? null
-    onFileChange(chosen)
-    e.target.value = ""
+    const chosen = e.target.files?.[0] ?? null;
+    onFileChange(chosen);
+    e.target.value = '';
   }
 
   return (
@@ -70,24 +70,24 @@ export function ImportFileDropZone({
         aria-describedby={`${hintId} ${constraintsId}`}
         onClick={handleZoneClick}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault()
-            handleZoneClick()
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleZoneClick();
           }
         }}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         className={cn(
-          "flex min-h-[140px] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-colors",
+          'flex min-h-[140px] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 transition-colors',
           dragActive
-            ? "border-primary bg-primary/5"
-            : "border-muted-foreground/25 bg-muted/30 hover:bg-muted/50"
+            ? 'border-primary bg-primary/5'
+            : 'border-muted-foreground/25 bg-muted/30 hover:bg-muted/50'
         )}
       >
         <FileUpIcon className="size-10 text-muted-foreground" aria-hidden />
         <p className="text-center text-sm text-muted-foreground">
-          Drag and drop or{" "}
+          Drag and drop or{' '}
           <span className="font-medium text-foreground">choose file</span> to
           upload
         </p>
@@ -114,5 +114,5 @@ export function ImportFileDropZone({
         <span>Max. size: 10MB</span>
       </FieldDescription>
     </Field>
-  )
+  );
 }

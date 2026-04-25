@@ -1,4 +1,4 @@
-import { create } from "zustand"
+import { create } from 'zustand';
 
 export interface ActiveImport {
   id: number
@@ -21,4 +21,4 @@ export const useImportProgressStore = create<ImportProgressState>((set) => ({
   clearActiveImport: () => set({ activeImport: null }),
   hideProgressCardInLayout: false,
   setHideProgressCardInLayout: (value) => set({ hideProgressCardInLayout: value }),
-}))
+}));

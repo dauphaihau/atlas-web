@@ -3,10 +3,10 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationNext,
-  PaginationPrevious,
-} from "@atlas/ui/pagination"
+  PaginationPrevious
+} from '@atlas/ui/pagination';
 
-export const PER_PAGE_OPTIONS = [10, 15, 25, 50] as const
+export const PER_PAGE_OPTIONS = [10, 15, 25, 50] as const;
 
 export interface TablePaginationProps {
   from: number
@@ -32,7 +32,7 @@ export function TablePagination({
   totalPages,
   onPrev,
   onNext,
-  ariaLabel = "Table pagination",
+  ariaLabel = 'Table pagination',
 }: TablePaginationProps) {
   return (
     <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -80,5 +80,5 @@ export function TablePagination({
         </Pagination>
       )}
     </div>
-  )
+  );
 }

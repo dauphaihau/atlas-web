@@ -1,6 +1,6 @@
-import type { UserDto } from "../auth/dto"
+import type { UserDto } from '../auth/dto';
 
-export type { UserDto }
+export type { UserDto };
 
 /** POST /v1/users request body (admin create user). */
 export interface CreateUserRequestDto {
@@ -35,7 +35,7 @@ export interface ListUsersParams {
   page?: number
   per_page?: number
   search?: string
-  trashed?: "with" | "only"
+  trashed?: 'with' | 'only'
 }
 
 /** GET /v1/users response (paginated list). */
@@ -49,7 +49,7 @@ export interface ListUsersResponseDto {
 }
 
 /** GET /v1/users/export query params. */
-export type ExportUsersField = "id" | "name" | "email" | "roles" | "created_at"
+export type ExportUsersField = 'id' | 'name' | 'email' | 'roles' | 'created_at';
 
 export interface ExportUsersParams {
   /** ISO date string (YYYY-MM-DD). No filter when omitted. */

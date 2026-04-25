@@ -1,8 +1,8 @@
-import type { ImportStatusDto } from "./dto"
+import type { ImportStatusDto } from './dto';
 import type {
   ImportCompletedPayload,
-  ImportProgressPayload,
-} from "./import-events"
+  ImportProgressPayload
+} from './import-events';
 
 /**
  * Maps ImportProgressUpdated broadcast payload to ImportStatusDto-like object
@@ -14,7 +14,7 @@ export function importStatusFromProgress(
 ): ImportStatusDto {
   return {
     id: importId,
-    status: "processing",
+    status: 'processing',
     total_rows: payload.totalRows,
     processed_rows: payload.processedRows,
     progress_percentage: payload.progressPercentage,
@@ -23,7 +23,7 @@ export function importStatusFromProgress(
     errors: [],
     started_at: null,
     completed_at: null,
-  }
+  };
 }
 
 /**
@@ -38,11 +38,11 @@ export function importStatusFromCompleted(
     status: payload.status,
     total_rows: payload.totalRows,
     processed_rows: payload.processedRows,
-    progress_percentage: payload.status === "completed" ? 100 : 0,
+    progress_percentage: payload.status === 'completed' ? 100 : 0,
     created: payload.createdCount,
     updated: payload.updatedCount,
     errors: payload.errors ?? [],
     started_at: null,
     completed_at: null,
-  }
+  };
 }

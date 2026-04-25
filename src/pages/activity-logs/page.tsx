@@ -1,5 +1,5 @@
-import { ActivityLogsContent } from "@/features/activity-log"
+import { ActivityLogsContent } from '@/features/activity-log';
 
 export function ActivityLogsPage() {
-  return <ActivityLogsContent />
+  return <ActivityLogsContent />;
 }

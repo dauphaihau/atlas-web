@@ -1,13 +1,15 @@
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom"
-import { TooltipProvider } from "@atlas/ui/tooltip"
-import { DashboardLayout } from "@/widgets/DashboardLayout"
-import { ActivityLogsPage } from "@/pages/activity-logs/page"
-import { DashboardPage } from "@/pages/dashboard/page"
-import { LoginPage } from "@/pages/login/page"
-import { RegisterPage } from "@/pages/register/page"
-import { TenantsPage } from "@/pages/tenants/page"
-import { UsersPage } from "@/pages/users/page"
-import { SettingsPage } from "@/pages/settings/page"
+import {
+  BrowserRouter, Route, Routes, Navigate 
+} from 'react-router-dom';
+import { TooltipProvider } from '@atlas/ui/tooltip';
+import { DashboardLayout } from '@/widgets/DashboardLayout';
+import { ActivityLogsPage } from '@/pages/activity-logs/page';
+import { DashboardPage } from '@/pages/dashboard/page';
+import { LoginPage } from '@/pages/login/page';
+import { RegisterPage } from '@/pages/register/page';
+import { TenantsPage } from '@/pages/tenants/page';
+import { UsersPage } from '@/pages/users/page';
+import { SettingsPage } from '@/pages/settings/page';
 
 function App() {
   return (
@@ -27,7 +29,7 @@ function App() {
         </Routes>
       </TooltipProvider>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -6,5 +6,5 @@ export function ActivityLogsPageHeader() {
         View audit trail of user and resource changes.
       </p>
     </div>
-  )
+  );
 }

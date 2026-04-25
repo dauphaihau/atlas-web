@@ -1,4 +1,4 @@
-import { create } from "zustand"
+import { create } from 'zustand';
 
 interface AppState {
   /** Global loading overlay (e.g. for auth checks). */
@@ -9,4 +9,4 @@ interface AppState {
 export const useAppStore = create<AppState>((set) => ({
   globalLoading: false,
   setGlobalLoading: (loading) => set({ globalLoading: loading }),
-}))
+}));

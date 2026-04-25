@@ -4,8 +4,8 @@ export interface ListTenantsQueryParams {
 }
 
 export const tenantKeys = {
-  all: ["tenants"] as const,
+  all: ['tenants'] as const,
   list: (params?: ListTenantsQueryParams) =>
-    [...tenantKeys.all, "list", params ?? {}] as const,
-  detail: (id: number) => [...tenantKeys.all, "detail", id] as const,
-}
+    [...tenantKeys.all, 'list', params ?? {}] as const,
+  detail: (id: number) => [...tenantKeys.all, 'detail', id] as const,
+};

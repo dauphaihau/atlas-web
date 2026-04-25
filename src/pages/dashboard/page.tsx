@@ -1,4 +1,4 @@
-import { Button } from "@atlas/ui/button"
+import { Button } from '@atlas/ui/button';
 
 export function DashboardPage() {
   return (
@@ -19,5 +19,5 @@ export function DashboardPage() {
         </Button>
       </div>
     </div>
-  )
+  );
 }

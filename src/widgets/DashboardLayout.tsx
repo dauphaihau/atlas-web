@@ -1,4 +1,6 @@
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
+import {
+  Link, Outlet, useLocation, useNavigate 
+} from 'react-router-dom';
 import {
   Sidebar,
   SidebarContent,
@@ -10,22 +12,22 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
-} from "@atlas/ui/sidebar"
-import { Button } from "@atlas/ui/button"
-import { ImportProgressCard } from "@/features/user"
+  SidebarTrigger
+} from '@atlas/ui/sidebar';
+import { Button } from '@atlas/ui/button';
+import { ImportProgressCard } from '@/features/user';
 import {
   Building2Icon,
   LayoutDashboardIcon,
   ListChecksIcon,
   LogOutIcon,
   SettingsIcon,
-  UsersIcon,
-} from "lucide-react"
-import { AuthGuard } from "@/widgets/AuthGuard"
-import { useImportProgressStore } from "@/shared/store/import-progress.store"
-import { useMeQuery } from "@/shared/queries/auth"
-import { useLogoutMutation } from "@/shared/queries/auth"
+  UsersIcon
+} from 'lucide-react';
+import { AuthGuard } from '@/widgets/AuthGuard';
+import { useImportProgressStore } from '@/shared/store/import-progress.store';
+import { useMeQuery } from '@/shared/queries/auth';
+import { useLogoutMutation } from '@/shared/queries/auth';
 
 const navItems: Array<{
   to: string
@@ -34,21 +36,25 @@ const navItems: Array<{
   adminOnly?: boolean
   superAdminOnly?: boolean
 }> = [
-    { to: "/", label: "Dashboard", icon: LayoutDashboardIcon },
-    { to: "/users", label: "Users", icon: UsersIcon },
-    { to: "/tenants", label: "Tenants", icon: Building2Icon, superAdminOnly: true },
-    { to: "/activity-logs", label: "Activity Logs", icon: ListChecksIcon, adminOnly: true },
-    { to: "/settings", label: "Settings", icon: SettingsIcon },
-  ]
+  { to: '/', label: 'Dashboard', icon: LayoutDashboardIcon },
+  { to: '/users', label: 'Users', icon: UsersIcon },
+  {
+    to: '/tenants', label: 'Tenants', icon: Building2Icon, superAdminOnly: true, 
+  },
+  {
+    to: '/activity-logs', label: 'Activity Logs', icon: ListChecksIcon, adminOnly: true, 
+  },
+  { to: '/settings', label: 'Settings', icon: SettingsIcon },
+];
 
 export function DashboardLayout() {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { data: me } = useMeQuery()
-  const logout = useLogoutMutation()
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { data: me } = useMeQuery();
+  const logout = useLogoutMutation();
   const hideProgressCardInLayout = useImportProgressStore(
     (s) => s.hideProgressCardInLayout
-  )
+  );
 
   return (
     <AuthGuard>
@@ -63,9 +69,11 @@ export function DashboardLayout() {
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-2">
-                  {navItems.map(({ to, label, icon: Icon, adminOnly, superAdminOnly }) => {
-                    if (adminOnly && !me?.roles?.includes("admin")) return null
-                    if (superAdminOnly && !me?.roles?.includes("super_admin")) return null
+                  {navItems.map(({
+                    to, label, icon: Icon, adminOnly, superAdminOnly, 
+                  }) => {
+                    if (adminOnly && !me?.roles?.includes('admin')) return null;
+                    if (superAdminOnly && !me?.roles?.includes('super_admin')) return null;
                     return (
                       <SidebarMenuItem key={to}>
                         <SidebarMenuButton
@@ -78,7 +86,7 @@ export function DashboardLayout() {
                           isActive={location.pathname === to}
                         />
                       </SidebarMenuItem>
-                    )
+                    );
                   })}
                 </SidebarMenu>
               </SidebarGroupContent>
@@ -104,7 +112,7 @@ export function DashboardLayout() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => logout.mutate(undefined, { onSuccess: () => navigate("/login", { replace: true }) })}
+                onClick={() => logout.mutate(undefined, { onSuccess: () => navigate('/login', { replace: true }) })}
                 disabled={logout.isPending}
               >
                 <LogOutIcon className="size-4" />
@@ -121,5 +129,5 @@ export function DashboardLayout() {
         </SidebarInset>
       </SidebarProvider>
     </AuthGuard>
-  )
+  );
 }

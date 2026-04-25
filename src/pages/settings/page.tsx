@@ -8,5 +8,5 @@ export function SettingsPage() {
         </p>
       </div>
     </div>
-  )
+  );
 }

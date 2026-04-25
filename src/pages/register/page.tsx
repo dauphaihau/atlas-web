@@ -1,31 +1,31 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { Button } from "@atlas/ui/button"
-import { Input } from "@atlas/ui/input"
-import { useRegisterMutation } from "@/shared/queries/auth"
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '@atlas/ui/button';
+import { Input } from '@atlas/ui/input';
+import { useRegisterMutation } from '@/shared/queries/auth';
 
 export function RegisterPage() {
-  const navigate = useNavigate()
-  const register = useRegisterMutation()
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const navigate = useNavigate();
+  const register = useRegisterMutation();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const err = register.error as { body?: { message?: string | string[] }; message?: string } | undefined
-  const errorMessage = err?.message
-    ?? (Array.isArray(err?.body?.message) ? err.body.message.join(", ") : err?.body?.message)
-    ?? null
+  const err = register.error as { body?: { message?: string | string[] }; message?: string } | undefined;
+  const errorMessage = err?.message ??
+    (Array.isArray(err?.body?.message) ? err.body.message.join(', ') : err?.body?.message) ??
+    null;
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!name.trim() || !email.trim() || !password) return
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !password) return;
     register.mutate(
       { name: name.trim(), email: email.trim(), password },
       {
-        onSuccess: () => navigate("/", { replace: true }),
+        onSuccess: () => navigate('/', { replace: true }),
       }
-    )
-  }
+    );
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
@@ -92,16 +92,16 @@ export function RegisterPage() {
             />
           </div>
           <Button type="submit" className="w-full" disabled={register.isPending}>
-            {register.isPending ? "Creating account…" : "Register"}
+            {register.isPending ? 'Creating account…' : 'Register'}
           </Button>
         </form>
         <p className="text-muted-foreground text-center text-sm">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <Link to="/login" className="text-primary underline-offset-4 hover:underline">
             Sign in
           </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }

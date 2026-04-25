@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import { Button } from "@atlas/ui/button"
-import { Progress } from "@atlas/ui/progress"
-import { formatFileSize } from "@/shared/utils/format-file-size"
-import { FileUpIcon, XIcon } from "lucide-react"
+import { Button } from '@atlas/ui/button';
+import { Progress } from '@atlas/ui/progress';
+import { formatFileSize } from '@/shared/utils/format-file-size';
+import { FileUpIcon, XIcon } from 'lucide-react';
 
 export interface ImportFileCardProps {
   file: File
@@ -25,7 +25,7 @@ export function ImportFileCard({
   const percentage =
     progressPercentage != null && Number.isFinite(progressPercentage)
       ? Math.min(100, Math.max(0, progressPercentage))
-      : 0
+      : 0;
 
   return (
     <div
@@ -69,5 +69,5 @@ export function ImportFileCard({
         </div>
       )}
     </div>
-  )
+  );
 }

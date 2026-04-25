@@ -1,4 +1,4 @@
-import { AddTenantDialog } from "./AddTenantDialog"
+import { AddTenantDialog } from './AddTenantDialog';
 
 export function TenantsPageHeader() {
   return (
@@ -13,5 +13,5 @@ export function TenantsPageHeader() {
         <AddTenantDialog />
       </div>
     </div>
-  )
+  );
 }

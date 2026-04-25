@@ -1,38 +1,38 @@
-import { useState } from "react"
-import { Link, Navigate, useNavigate } from "react-router-dom"
-import { Button } from "@atlas/ui/button"
-import { Input } from "@atlas/ui/input"
-import { useLoginMutation, useMeQuery } from "@/shared/queries/auth"
+import { useState } from 'react';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Button } from '@atlas/ui/button';
+import { Input } from '@atlas/ui/input';
+import { useLoginMutation, useMeQuery } from '@/shared/queries/auth';
 
 export function LoginPage() {
-  const navigate = useNavigate()
-  const login = useLoginMutation()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const navigate = useNavigate();
+  const login = useLoginMutation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const { data: me } = useMeQuery({ enabled: true })
+  const { data: me } = useMeQuery({ enabled: true });
 
   if (me) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/" replace />;
   }
 
-  type ApiError = { message?: string; body?: { message?: string | string[] } }
-  const err = login.error as ApiError | undefined
+  type ApiError = { message?: string; body?: { message?: string | string[] } };
+  const err = login.error as ApiError | undefined;
   const errorMessage =
     err?.message ??
-    (Array.isArray(err?.body?.message) ? err.body.message.join(", ") : err?.body?.message) ??
-    null
+    (Array.isArray(err?.body?.message) ? err.body.message.join(', ') : err?.body?.message) ??
+    null;
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email.trim() || !password) return
+    e.preventDefault();
+    if (!email.trim() || !password) return;
     login.mutate(
       { email: email.trim(), password },
       {
-        onSuccess: () => navigate("/", { replace: true }),
+        onSuccess: () => navigate('/', { replace: true }),
       }
-    )
-  }
+    );
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
@@ -81,16 +81,16 @@ export function LoginPage() {
             />
           </div>
           <Button type="submit" className="w-full" disabled={login.isPending}>
-            {login.isPending ? "Signing in…" : "Sign in"}
+            {login.isPending ? 'Signing in…' : 'Sign in'}
           </Button>
         </form>
         <p className="text-muted-foreground text-center text-sm">
-          Don&apos;t have an account?{" "}
+          Don&apos;t have an account?{' '}
           <Link to="/register" className="text-primary underline-offset-4 hover:underline">
             Register
           </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }

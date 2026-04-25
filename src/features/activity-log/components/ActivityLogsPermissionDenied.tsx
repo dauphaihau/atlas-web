@@ -6,5 +6,5 @@ export function ActivityLogsPermissionDenied() {
         You do not have permission to view activity logs.
       </p>
     </div>
-  )
+  );
 }

@@ -1,14 +1,14 @@
-import { useMeQuery } from "@/shared/queries/auth"
-import { ActivityLogsPageHeader } from "./ActivityLogsPageHeader"
-import { ActivityLogsPermissionDenied } from "./ActivityLogsPermissionDenied"
-import { ActivityLogsTable } from "./ActivityLogsTable"
+import { useMeQuery } from '@/shared/queries/auth';
+import { ActivityLogsPageHeader } from './ActivityLogsPageHeader';
+import { ActivityLogsPermissionDenied } from './ActivityLogsPermissionDenied';
+import { ActivityLogsTable } from './ActivityLogsTable';
 
 export function ActivityLogsContent() {
-  const { data: me } = useMeQuery()
-  const isAdmin = me?.roles?.includes("admin") ?? false
+  const { data: me } = useMeQuery();
+  const isAdmin = me?.roles?.includes('admin') ?? false;
 
   if (!isAdmin) {
-    return <ActivityLogsPermissionDenied />
+    return <ActivityLogsPermissionDenied />;
   }
 
   return (
@@ -16,5 +16,5 @@ export function ActivityLogsContent() {
       <ActivityLogsPageHeader />
       <ActivityLogsTable />
     </div>
-  )
+  );
 }

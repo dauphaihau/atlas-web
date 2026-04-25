@@ -1,7 +1,7 @@
-import { getEcho } from "@/shared/lib/echo"
-import logger from "@/shared/lib/logger"
+import { getEcho } from '@/shared/lib/echo';
+import logger from '@/shared/lib/logger';
 
-const log = logger("user-import-subscription")
+const log = logger('user-import-subscription');
 
 /** Payload broadcast by ImportProgressUpdated (camelCase from Laravel). */
 export interface ImportProgressPayload {
@@ -25,8 +25,8 @@ export interface ImportCompletedPayload {
   errors: Array<{ row: number; message: string }>
 }
 
-export type ImportProgressListener = (payload: ImportProgressPayload) => void
-export type ImportCompletedListener = (payload: ImportCompletedPayload) => void
+export type ImportProgressListener = (payload: ImportProgressPayload) => void;
+export type ImportCompletedListener = (payload: ImportCompletedPayload) => void;
 
 export interface SubscribeToImportCallbacks {
   onProgress: ImportProgressListener
@@ -37,47 +37,47 @@ export function subscribeToImport(
   importId: number,
   callbacks: SubscribeToImportCallbacks
 ): () => void {
-  const echo = getEcho()
+  const echo = getEcho();
   if (echo == null) {
-    return () => {}
+    return () => {};
   }
 
-  const channelName = `imports.${importId}`
-  const channel = echo.private(channelName)
+  const channelName = `imports.${importId}`;
+  const channel = echo.private(channelName);
 
-  log.debug("subscribing to import channel", {
+  log.debug('subscribing to import channel', {
     importId,
     channel: channelName,
-  })
+  });
 
   channel.subscribed(() => {
-    log.debug("import channel subscribed", {
+    log.debug('import channel subscribed', {
       importId,
       channel: channelName,
-    })
-  })
+    });
+  });
 
   channel.error((error: unknown) => {
-    log.error("import channel subscription error", {
+    log.error('import channel subscription error', {
       importId,
       channel: channelName,
       error,
-    })
-  })
+    });
+  });
 
   // Laravel broadcastAs() event names are listened with a leading dot.
-  channel.listen(".import.progress", (e: ImportProgressPayload) => {
-    callbacks.onProgress(e)
-  })
-  channel.listen(".import.completed", (e: ImportCompletedPayload) => {
-    callbacks.onCompleted(e)
-  })
+  channel.listen('.import.progress', (e: ImportProgressPayload) => {
+    callbacks.onProgress(e);
+  });
+  channel.listen('.import.completed', (e: ImportCompletedPayload) => {
+    callbacks.onCompleted(e);
+  });
 
   return () => {
-    log.debug("leaving import channel", {
+    log.debug('leaving import channel', {
       importId,
       channel: channelName,
-    })
-    echo.leave(channelName)
-  }
+    });
+    echo.leave(channelName);
+  };
 }

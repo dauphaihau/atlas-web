@@ -1,7 +1,7 @@
 import {
   TenantsPageHeader,
-  TenantsTable,
-} from "@/features/tenant"
+  TenantsTable
+} from '@/features/tenant';
 
 export function TenantsPage() {
   return (
@@ -11,5 +11,5 @@ export function TenantsPage() {
         <TenantsTable />
       </div>
     </div>
-  )
+  );
 }

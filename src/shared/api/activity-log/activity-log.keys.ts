@@ -12,10 +12,10 @@ export interface ListActivityLogsQueryParams {
 }
 
 export const activityLogKeys = {
-  all: ["activity-logs"] as const,
+  all: ['activity-logs'] as const,
   list: (params?: ListActivityLogsQueryParams) =>
-    [...activityLogKeys.all, "list", params ?? {}] as const,
-  detail: (id: number) => [...activityLogKeys.all, "detail", id] as const,
+    [...activityLogKeys.all, 'list', params ?? {}] as const,
+  detail: (id: number) => [...activityLogKeys.all, 'detail', id] as const,
   listForUser: (userId: number, params?: ListActivityLogsQueryParams) =>
-    [...activityLogKeys.all, "user", userId, params ?? {}] as const,
-}
+    [...activityLogKeys.all, 'user', userId, params ?? {}] as const,
+};

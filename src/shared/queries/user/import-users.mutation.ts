@@ -1,9 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { userApi, userKeys } from "@/shared/api/user"
-import { useImportProgressStore } from "@/shared/store/import-progress.store"
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { userApi, userKeys } from '@/shared/api/user';
+import { useImportProgressStore } from '@/shared/store/import-progress.store';
 
 export function useImportUsersMutation() {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (file: File) => userApi.importUsers(file),
     onSuccess: (data, variables) => {
@@ -11,8 +11,8 @@ export function useImportUsersMutation() {
         id: data.id,
         fileName: variables.name,
         fileSize: variables.size,
-      })
-      queryClient.invalidateQueries({ queryKey: userKeys.all })
+      });
+      queryClient.invalidateQueries({ queryKey: userKeys.all });
     },
-  })
+  });
 }
