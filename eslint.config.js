@@ -1,9 +1,5 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import dauphaihau from '@dauphaihau/eslint-config';
+import { defineConfig } from 'eslint/config';
 
 const atlasRules = {
   rules: {
@@ -22,14 +18,14 @@ const atlasRules = {
       create(context) {
         return {
           ImportDeclaration(node) {
-            if (node.source.value !== 'lucide-react') return
+            if (node.source.value !== 'lucide-react') return;
 
             for (const specifier of node.specifiers) {
-              if (specifier.type !== 'ImportSpecifier') continue
-              if (specifier.importKind === 'type') continue
+              if (specifier.type !== 'ImportSpecifier') continue;
+              if (specifier.importKind === 'type') continue;
 
-              const localName = specifier.local.name
-              if (localName.endsWith('Icon')) continue
+              const localName = specifier.local.name;
+              if (localName.endsWith('Icon')) continue;
 
               context.report({
                 node: specifier.local,
@@ -37,34 +33,49 @@ const atlasRules = {
                 data: {
                   suggested: `${localName}Icon`,
                 },
-              })
+              });
             }
           },
-        }
+        };
       },
     },
   },
-}
+};
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  ...(await dauphaihau({
+    react: true,
+    tailwind: true,
+    typescript: true,
+  })),
+  {
+    files: [
+      '**/main.tsx',
+      '**/pages/**/page.tsx',
+      '**/components/ui/*.tsx',
+      '**/shared/lib/query-provider.tsx',
+    ],
+    rules: {
+      'check-file/filename-naming-convention': 'off',
+    },
+  },
+  {
+    files: ['**/components/ui/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
   {
     files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
-    ],
     plugins: {
       atlas: atlasRules,
     },
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-    },
     rules: {
+      '@stylistic/operator-linebreak': ['error', 'after', { overrides: { '|': 'before', '?': 'before', ':': 'before' } }],
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/naming-convention': 'off',
       'atlas/lucide-icon-suffix': 'error',
+      'react/no-unescaped-entities': 'off',
     },
   },
-])
+]);
