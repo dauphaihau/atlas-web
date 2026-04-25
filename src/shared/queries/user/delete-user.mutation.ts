@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { ListUsersResponseDto } from '@/shared/api/user';
 import { userApi, userKeys } from '@/shared/api/user';
 
-type PreviousListState = { queryKey: QueryKey; data: ListUsersResponseDto };
+type PreviousListState = { queryKey: QueryKey; snapshot: ListUsersResponseDto };
 
 export function useDeleteUserMutation() {
   const queryClient = useQueryClient();
@@ -21,16 +21,17 @@ export function useDeleteUserMutation() {
           Array.isArray(listData.data) &&
           listData.meta != null
         ) {
-          const hasUser = listData.data.some((u) => u.id === id);
+          const hasUser = listData.data.some((user) => user.id === id);
           if (!hasUser) continue;
-          previousListStates.push({ queryKey, data: { ...listData } });
+          previousListStates.push({ queryKey, snapshot: { ...listData } });
           const nextData: ListUsersResponseDto = {
-            data: listData.data.filter((u) => u.id !== id),
+            ...listData,
             meta: {
               ...listData.meta,
               total: Math.max(0, listData.meta.total - 1),
             },
           };
+          nextData.data = listData.data.filter((user) => user.id !== id);
           queryClient.setQueryData(queryKey, nextData);
         }
       }
@@ -38,8 +39,8 @@ export function useDeleteUserMutation() {
     },
     onError: (_err, _id, context) => {
       if (context?.previousListStates) {
-        for (const { queryKey, data } of context.previousListStates) {
-          queryClient.setQueryData(queryKey, data);
+        for (const { queryKey, snapshot } of context.previousListStates) {
+          queryClient.setQueryData(queryKey, snapshot);
         }
       }
     },
