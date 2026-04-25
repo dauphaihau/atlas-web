@@ -1,4 +1,4 @@
-import dauphaihau from '@dauphaihau/eslint-config';
+import dauphaihauConfig from '@dauphaihau/eslint-config';
 import { defineConfig } from 'eslint/config';
 
 const atlasRules = {
@@ -43,11 +43,7 @@ const atlasRules = {
 };
 
 export default defineConfig([
-  ...(await dauphaihau({
-    react: true,
-    tailwind: true,
-    typescript: true,
-  })),
+  ...(await dauphaihauConfig()),
   {
     files: [
       '**/main.tsx',
@@ -71,11 +67,28 @@ export default defineConfig([
       atlas: atlasRules,
     },
     rules: {
-      '@stylistic/operator-linebreak': ['error', 'after', { overrides: { '|': 'before', '?': 'before', ':': 'before' } }],
       '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/naming-convention': 'off',
       'atlas/lucide-icon-suffix': 'error',
       'react/no-unescaped-entities': 'off',
+    },
+  },
+  // Backend API types use snake_case field names and structural `data` wrappers
+  {
+    files: [
+      '**/shared/api/**/*.ts',
+      '**/shared/lib/api-client.ts',
+      '**/shared/lib/echo.ts',
+    ],
+    rules: {
+      '@typescript-eslint/naming-convention': 'off',
+      'id-denylist': 'off',
+    },
+  },
+  // Queries access backend response shapes (e.g. `.data` from paginated responses)
+  {
+    files: ['**/shared/queries/**/*.ts'],
+    rules: {
+      'id-denylist': 'off',
     },
   },
 ]);

@@ -30,7 +30,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
-    "@dauphaihau/eslint-config": "^0.2.0",
+    "@dauphaihau/eslint-config": "^0.2.3",
     "@eslint/js": "^9.39.1",
     "@tailwindcss/vite": "^4.1.18",
     "@types/node": "^24.10.1",
