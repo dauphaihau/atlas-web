@@ -34,15 +34,15 @@ export function ImportFileDropZone({
 }: ImportFileDropZoneProps) {
   const [dragActive, setDragActive] = useState(false);
 
-  function handleDrop(e: React.DragEvent) {
-    e.preventDefault();
+  function handleDrop(event: React.DragEvent) {
+    event.preventDefault();
     setDragActive(false);
-    const file = e.dataTransfer.files?.[0];
+    const file = event.dataTransfer.files?.[0];
     if (file) onFileChange(file);
   }
 
-  function handleDragOver(e: React.DragEvent) {
-    e.preventDefault();
+  function handleDragOver(event: React.DragEvent) {
+    event.preventDefault();
     setDragActive(true);
   }
 
@@ -54,10 +54,10 @@ export function ImportFileDropZone({
     inputRef?.current?.click();
   }
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const chosen = e.target.files?.[0] ?? null;
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const chosen = event.target.files?.[0] ?? null;
     onFileChange(chosen);
-    e.target.value = '';
+    event.target.value = '';
   }
 
   return (
@@ -69,9 +69,9 @@ export function ImportFileDropZone({
         aria-label="Drag and drop or choose file to upload"
         aria-describedby={`${hintId} ${constraintsId}`}
         onClick={handleZoneClick}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
             handleZoneClick();
           }
         }}
