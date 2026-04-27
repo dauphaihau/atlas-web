@@ -55,7 +55,11 @@ export const userApi = {
     const formData = new FormData();
     formData.append('file', file);
     return api
-      .post<ApiResponseWrapper<ImportUsersResponseDto>>('/api/v1/users/import', formData)
+      .post<ApiResponseWrapper<ImportUsersResponseDto>>(
+        '/api/v1/users/import',
+        formData,
+        { headers: { 'Idempotency-Key': crypto.randomUUID() } },
+      )
       .then(unwrapData);
   },
 
@@ -89,7 +93,10 @@ export const userApi = {
   /** Request users CSV export; returns signed download URL. */
   exportUsers(params?: ExportUsersParams): Promise<ExportUsersResponseDto> {
     return api
-      .get<ApiResponseWrapper<ExportUsersResponseDto>>(buildExportUsersUrl(params))
+      .get<ApiResponseWrapper<ExportUsersResponseDto>>(
+        buildExportUsersUrl(params),
+        { headers: { 'Idempotency-Key': crypto.randomUUID() } },
+      )
       .then(unwrapData);
   },
 
