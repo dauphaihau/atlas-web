@@ -5,6 +5,7 @@ export interface TenantDto {
   slug: string
   settings: Record<string, unknown> | null
   is_active: boolean
+  version: number
   created_at: string
   updated_at: string
 }
@@ -35,6 +36,7 @@ export interface CreateTenantRequestDto {
 
 /** PUT /v1/tenants/:id request body (update tenant). */
 export interface UpdateTenantRequestDto {
+  version: number
   name?: string
   slug?: string
   settings?: Record<string, unknown> | null

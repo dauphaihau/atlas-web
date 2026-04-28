@@ -6,6 +6,7 @@ import type {
   ImportUsersResponseDto,
   ListUsersParams,
   ListUsersResponseDto,
+  UpdateUserRequestDto,
   UserDto,
   UserStatsDto
 } from './dto';
@@ -43,6 +44,12 @@ function buildExportUsersUrl(params?: ExportUsersParams): string {
 export const userApi = {
   list(params?: ListUsersParams): Promise<ListUsersResponseDto> {
     return api.get<ListUsersResponseDto>(buildListUsersUrl(params));
+  },
+
+  update(id: number, payload: UpdateUserRequestDto): Promise<UserDto> {
+    return api
+      .patch<ApiResponseWrapper<UserDto>>(`/api/v1/users/${id}`, payload)
+      .then(unwrapData);
   },
 
   create(payload: CreateUserRequestDto): Promise<UserDto> {

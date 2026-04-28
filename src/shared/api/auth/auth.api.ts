@@ -3,6 +3,7 @@ import type {
   LoginWebResponseDto,
   RegisterRequestDto,
   RegisterResponseDto,
+  UpdateProfileRequestDto,
   UserDto
 } from './dto';
 import {
@@ -29,5 +30,11 @@ export const authApi = {
 
   me(): Promise<UserDto> {
     return api.get<ApiResponseWrapper<UserDto>>('/api/v1/me').then(unwrapData);
+  },
+
+  updateProfile(payload: UpdateProfileRequestDto): Promise<UserDto> {
+    return api
+      .patch<ApiResponseWrapper<UserDto>>('/api/v1/me', payload)
+      .then(unwrapData);
   },
 };

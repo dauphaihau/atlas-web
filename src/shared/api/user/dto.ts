@@ -9,6 +9,14 @@ export interface CreateUserRequestDto {
   password: string
 }
 
+/** PATCH /v1/users/:id request body (admin update user). */
+export interface UpdateUserRequestDto {
+  version: number
+  name?: string
+  email?: string
+  password?: string
+}
+
 /** POST /v1/users/import response (202 Accepted). */
 export interface ImportUsersResponseDto {
   id: number

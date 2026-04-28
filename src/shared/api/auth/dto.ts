@@ -10,8 +10,17 @@ export interface UserDto {
   role?: string | null
   /** Tenant ID for non–super-admins; null for super_admin. Sent as X-Tenant-ID on requests. */
   tenant_id?: number | null
+  version: number
   created_at: string | null
   deleted_at?: string | null
+}
+
+/** PATCH /v1/me request body (update own profile). */
+export interface UpdateProfileRequestDto {
+  version: number
+  name?: string
+  email?: string
+  password?: string
 }
 
 /** POST /v1/login request body. */
