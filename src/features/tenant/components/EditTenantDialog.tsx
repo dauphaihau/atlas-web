@@ -1,10 +1,12 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useQueryClient } from '@tanstack/react-query';
 import type { TenantDto } from '@/shared/api/tenant';
+import { tenantKeys } from '@/shared/api/tenant';
 import { Button } from '@atlas/ui/button';
 import {
   Dialog,
@@ -23,16 +25,9 @@ import {
 } from '@atlas/ui/field';
 import { Input } from '@atlas/ui/input';
 import { useUpdateTenantMutation } from '@/shared/queries/tenant';
-
-type ApiError = { message?: string; body?: { message?: string | string[] } };
-
-function getErrorMessage(err: ApiError | undefined): string | null {
-  if (!err) return null;
-  const bodyMsg = Array.isArray(err.body?.message)
-    ? err.body.message.join(', ')
-    : err.body?.message;
-  return err.message ?? bodyMsg ?? null;
-}
+import { type ApiError, getErrorMessage, isVersionConflict } from '@/shared/lib/api-errors';
+import { ConflictCallout } from '@/shared/ui/app/conflict-callout';
+import { RestoreEditsAlert } from '@/shared/ui/app/restore-edits-alert';
 
 const slugRegex = /^[a-zA-Z0-9_-]+$/;
 
@@ -81,6 +76,9 @@ export function EditTenantDialog({
   open,
   onOpenChange,
 }: EditTenantDialogProps) {
+  const queryClient = useQueryClient();
+  const [pendingEdits, setPendingEdits] = useState<EditTenantFormValues | null>(null);
+
   const form = useForm<EditTenantFormValues>({
     resolver: zodResolver(editTenantSchema),
     defaultValues: {
@@ -92,7 +90,9 @@ export function EditTenantDialog({
   });
 
   const updateTenant = useUpdateTenantMutation();
-  const updateError = getErrorMessage(updateTenant.error as ApiError | undefined);
+  const rawError = updateTenant.error as ApiError | undefined;
+  const updateError = getErrorMessage(rawError);
+  const isConflict = isVersionConflict(rawError);
 
   useEffect(() => {
     if (tenant != null) {
@@ -116,6 +116,7 @@ export function EditTenantDialog({
       {
         id: tenant.id,
         payload: {
+          version: tenant.version,
           name: formValues.name,
           slug: formValues.slug,
           settings,
@@ -132,7 +133,22 @@ export function EditTenantDialog({
 
   const handleOpenChange = (next: boolean) => {
     onOpenChange(next);
-    if (!next) form.reset();
+    if (!next) {
+      form.reset();
+      setPendingEdits(null);
+    }
+  };
+
+  const handleReload = () => {
+    setPendingEdits(form.getValues());
+    queryClient.invalidateQueries({ queryKey: tenantKeys.all });
+    updateTenant.reset();
+  };
+
+  const handleRestoreEdits = () => {
+    if (pendingEdits == null) return;
+    form.reset(pendingEdits);
+    setPendingEdits(null);
   };
 
   return (
@@ -146,7 +162,13 @@ export function EditTenantDialog({
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
         >
-          {updateError != null && updateError !== '' && (
+          {isConflict && (
+            <ConflictCallout subject="tenant" onReload={handleReload} />
+          )}
+          {!isConflict && pendingEdits != null && (
+            <RestoreEditsAlert subject="Tenant" onRestore={handleRestoreEdits} />
+          )}
+          {updateError != null && updateError !== '' && !isConflict && (
             <p className="text-destructive text-sm" role="alert">
               {updateError}
             </p>
@@ -244,7 +266,7 @@ export function EditTenantDialog({
             <Button
               type="submit"
               form="edit-tenant-form"
-              disabled={updateTenant.isPending}
+              disabled={updateTenant.isPending || isConflict}
             >
               {updateTenant.isPending ? 'Saving…' : 'Save'}
             </Button>

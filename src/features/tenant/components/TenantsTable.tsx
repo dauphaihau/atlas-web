@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
   useTenantsQuery,
   useDeleteTenantMutation
@@ -72,6 +72,15 @@ export function TenantsTable({ onEdit }: TenantsTableProps) {
 
   const tenants = tenantsQuery.data?.data ?? [];
   const meta = tenantsQuery.data?.meta;
+
+  useEffect(() => {
+    if (tenantToEdit == null) return;
+    const fresh = tenants.find((t) => t.id === tenantToEdit.id);
+    if (fresh != null && fresh.version !== tenantToEdit.version) {
+      setTenantToEdit(fresh);
+    }
+  }, [tenants, tenantToEdit]);
+
   const total = meta?.total ?? 0;
   const currentPage = meta?.current_page ?? page;
   const totalPages =
