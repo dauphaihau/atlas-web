@@ -1,3 +1,5 @@
+import { UpdateProfileForm } from '@/features/user/components/UpdateProfileForm';
+
 export function SettingsPage() {
   return (
     <div className="space-y-6">
@@ -6,6 +8,10 @@ export function SettingsPage() {
         <p className="text-muted-foreground">
           Application and account settings.
         </p>
+      </div>
+      <div className="space-y-2">
+        <h2 className="text-lg font-medium">Profile</h2>
+        <UpdateProfileForm />
       </div>
     </div>
   );

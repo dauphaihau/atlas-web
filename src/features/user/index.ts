@@ -1,4 +1,5 @@
 export { AddUserDialog } from './components/AddUserDialog';
+export { EditUserDialog } from './components/EditUserDialog';
 export { ExportUsersButton, ExportUsersError } from './components/ExportUsers';
 export { ImportProgressCard } from './components/ImportProgressCard';
 export { ImportUsersDialog } from './components/ImportUsersDialog';

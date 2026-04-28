@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
   useUsersQuery,
   useUpdateUserAvatarMutation,
@@ -7,6 +7,7 @@ import {
   useForceDeleteUserMutation,
   useUserStatsQuery
 } from '@/shared/queries/user';
+import { EditUserDialog } from '../EditUserDialog';
 import { useDebouncedValue } from '@/shared/hooks/use-debounced-value';
 import type { UserDto } from '@/shared/api/user';
 import { Skeleton } from '@atlas/ui/skeleton';
@@ -47,6 +48,7 @@ export function UsersTable({ onEdit, onDelete }: UsersTableProps) {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState<typeof PER_PAGE_OPTIONS[number]>(PER_PAGE_OPTIONS[0]);
   const [searchInput, setSearchInput] = useState('');
+  const [userToEdit, setUserToEdit] = useState<UserDto | null>(null);
   const [userToDelete, setUserToDelete] = useState<UserDto | null>(null);
   const [userToForceDelete, setUserToForceDelete] = useState<UserDto | null>(null);
 
@@ -67,6 +69,15 @@ export function UsersTable({ onEdit, onDelete }: UsersTableProps) {
 
   const users = usersQuery.data?.data ?? [];
   const meta = usersQuery.data?.meta;
+
+  useEffect(() => {
+    if (userToEdit == null) return;
+    const fresh = users.find((u) => u.id === userToEdit.id);
+    if (fresh != null && fresh.version !== userToEdit.version) {
+      setUserToEdit(fresh);
+    }
+  }, [users, userToEdit]);
+
   const total = meta?.total ?? 0;
   const currentPage = meta?.current_page ?? page;
   const totalPages = meta && meta.per_page > 0 ? Math.ceil(meta.total / meta.per_page) : 1;
@@ -204,7 +215,7 @@ export function UsersTable({ onEdit, onDelete }: UsersTableProps) {
                                 {activeTab === 'all'
                                   ? (
                                     <>
-                                      <DropdownMenuItem onClick={() => onEdit?.(user)}>
+                                      <DropdownMenuItem onClick={() => setUserToEdit(user)}>
                                         <PencilIcon className="size-4" />
                                         Edit
                                       </DropdownMenuItem>
@@ -261,6 +272,12 @@ export function UsersTable({ onEdit, onDelete }: UsersTableProps) {
           ariaLabel="Users table pagination"
         />
       )}
+
+      <EditUserDialog
+        user={userToEdit}
+        open={userToEdit != null}
+        onOpenChange={(open) => { if (!open) setUserToEdit(null); }}
+      />
 
       <DeleteUserDialog
         user={userToDelete}
