@@ -52,3 +52,15 @@ export interface RegisterResponseDto {
   token: string
   user: UserDto
 }
+
+export interface InvitationDto {
+  name: string
+  email: string
+}
+
+export interface AcceptInvitationRequestDto {
+  email: string
+  token: string
+  password: string
+  password_confirmation: string
+}

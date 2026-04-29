@@ -1,6 +1,8 @@
 import type {
   LoginRequestDto,
   LoginWebResponseDto,
+  AcceptInvitationRequestDto,
+  InvitationDto,
   RegisterRequestDto,
   RegisterResponseDto,
   UpdateProfileRequestDto,
@@ -35,6 +37,19 @@ export const authApi = {
   updateProfile(payload: UpdateProfileRequestDto): Promise<UserDto> {
     return api
       .patch<ApiResponseWrapper<UserDto>>('/api/v1/me', payload)
+      .then(unwrapData);
+  },
+
+  invitation(email: string, token: string): Promise<InvitationDto> {
+    const params = new URLSearchParams({ email, token });
+    return api
+      .get<ApiResponseWrapper<InvitationDto>>(`/api/v1/invitations/accept?${params.toString()}`, { skipAuth: true })
+      .then(unwrapData);
+  },
+
+  acceptInvitation(payload: AcceptInvitationRequestDto): Promise<{ email: string }> {
+    return api
+      .post<ApiResponseWrapper<{ email: string }>>('/api/v1/invitations/accept', payload, { skipAuth: true })
       .then(unwrapData);
   },
 };

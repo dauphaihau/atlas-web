@@ -7,6 +7,7 @@ import { ActivityLogsPage } from '@/pages/activity-logs/page';
 import { DashboardPage } from '@/pages/dashboard/page';
 import { LoginPage } from '@/pages/login/page';
 import { RegisterPage } from '@/pages/register/page';
+import { AcceptInvitationPage } from '@/pages/invitations/accept/page';
 import { TenantsPage } from '@/pages/tenants/page';
 import { UsersPage } from '@/pages/users/page';
 import { SettingsPage } from '@/pages/settings/page';
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/invitations/accept" element={<AcceptInvitationPage />} />
           <Route element={<DashboardLayout />}>
             <Route index element={<DashboardPage />} />
             <Route path="tenants" element={<TenantsPage />} />
