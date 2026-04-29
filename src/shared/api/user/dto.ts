@@ -11,6 +11,13 @@ export interface CreateUserRequestDto {
   send_invite?: boolean
 }
 
+/** GET /v1/roles/assignable role item. */
+export interface AssignableRoleDto {
+  slug: string
+  name: string
+  description: string | null
+}
+
 /** PATCH /v1/users/:id request body (admin update user). */
 export interface UpdateUserRequestDto {
   version: number

@@ -1,5 +1,6 @@
 export { useUsersQuery } from './get-users.query';
 export { useUserStatsQuery } from './get-user-stats.query';
+export { useAssignableRolesQuery } from './get-assignable-roles.query';
 export { useCreateUserMutation } from './create-user.mutation';
 export { useUpdateUserMutation } from './update-user.mutation';
 export { useDeleteUserMutation } from './delete-user.mutation';

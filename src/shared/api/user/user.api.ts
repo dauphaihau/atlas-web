@@ -1,5 +1,6 @@
 import type {
   CreateUserRequestDto,
+  AssignableRoleDto,
   ExportUsersParams,
   ExportUsersResponseDto,
   ImportStatusDto,
@@ -58,6 +59,12 @@ export const userApi = {
       .then(unwrapData);
   },
 
+  getAssignableRoles(): Promise<AssignableRoleDto[]> {
+    return api
+      .get<ApiResponseWrapper<AssignableRoleDto[]>>('/api/v1/roles/assignable')
+      .then(unwrapData);
+  },
+
   importUsers(file: File): Promise<ImportUsersResponseDto> {
     const formData = new FormData();
     formData.append('file', file);
@@ -65,7 +72,7 @@ export const userApi = {
       .post<ApiResponseWrapper<ImportUsersResponseDto>>(
         '/api/v1/users/import',
         formData,
-        { headers: { 'Idempotency-Key': crypto.randomUUID() } },
+        { headers: { 'Idempotency-Key': crypto.randomUUID() } }
       )
       .then(unwrapData);
   },
@@ -102,7 +109,7 @@ export const userApi = {
     return api
       .get<ApiResponseWrapper<ExportUsersResponseDto>>(
         buildExportUsersUrl(params),
-        { headers: { 'Idempotency-Key': crypto.randomUUID() } },
+        { headers: { 'Idempotency-Key': crypto.randomUUID() } }
       )
       .then(unwrapData);
   },

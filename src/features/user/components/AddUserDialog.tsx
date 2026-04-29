@@ -2,7 +2,6 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-import { z } from 'zod';
 import { Button } from '@atlas/ui/button';
 import { Checkbox } from '@atlas/ui/checkbox';
 import {
@@ -22,17 +21,20 @@ import {
 } from '@atlas/ui/field';
 import { Input } from '@atlas/ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@atlas/ui/select';
-import { useCreateUserMutation } from '@/shared/queries/user';
+  useAssignableRolesQuery,
+  useCreateUserMutation
+} from '@/shared/queries/user';
 import { PlusIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import {
+  isAssignableRoleOption
+} from './add-user-dialog-roles';
+import {
+  addUserSchema,
+  type AddUserFormValues
+} from './add-user-dialog-schema';
+import { AddUserRoleSelectField } from './AddUserRoleSelectField';
 
 type ApiError = { message?: string; body?: { message?: string | string[] } };
 
@@ -43,46 +45,6 @@ function getErrorMessage(err: ApiError | undefined): string | null {
     : err.body?.message;
   return err.message ?? bodyMsg ?? null;
 }
-
-const addUserSchema = z.object({
-  name: z
-    .string()
-    .min(1, 'Name is required.')
-    .max(255, 'Name must be at most 255 characters.'),
-  email: z.string().min(1, 'Email is required.').email('Enter a valid email.'),
-  role: z.enum(['user', 'admin']),
-  send_invite: z.boolean(),
-  password: z
-    .string()
-    .max(255, 'Password must be at most 255 characters.')
-    .optional()
-    .or(z.literal('')),
-}).superRefine((values, ctx) => {
-  if (!values.send_invite && (!values.password || values.password.length < 8)) {
-    ctx.addIssue({
-      code: 'custom',
-      path: ['password'],
-      message: 'Password must be at least 8 characters.',
-    });
-  }
-});
-
-type AddUserFormValues = z.infer<typeof addUserSchema>;
-
-const roleOptions = [
-  {
-    value: 'user',
-    label: 'User',
-    description: 'Standard access for tenant users.',
-  },
-  {
-    value: 'admin',
-    label: 'Admin',
-    description: 'Can manage users, imports, exports, and activity logs.',
-  },
-] as const;
-
-type RoleValue = AddUserFormValues['role'];
 
 export function AddUserDialog() {
   const [open, setOpen] = useState(false);
@@ -98,11 +60,24 @@ export function AddUserDialog() {
     },
   });
   const sendInvite = useWatch({ control: form.control, name: 'send_invite' });
-  const selectedRole = useWatch({ control: form.control, name: 'role' });
-  const selectedRoleDescription = roleOptions.find((role) => role.value === selectedRole)?.description;
 
   const createUser = useCreateUserMutation();
+  const assignableRolesQuery = useAssignableRolesQuery({ enabled: open });
+  const assignableRoles = useMemo(
+    () => (assignableRolesQuery.data ?? []).filter(isAssignableRoleOption),
+    [assignableRolesQuery.data]
+  );
+  const rolesUnavailable = assignableRoles.length === 0;
   const createError = getErrorMessage(createUser.error as ApiError | undefined);
+
+  useEffect(() => {
+    if (!open || rolesUnavailable) return;
+
+    const currentRole = form.getValues('role');
+    if (!assignableRoles.some((role) => role.slug === currentRole)) {
+      form.setValue('role', assignableRoles[0].slug, { shouldValidate: true });
+    }
+  }, [assignableRoles, form, open, rolesUnavailable]);
 
   const onSubmit = (formValues: AddUserFormValues) => {
     createUser.mutate({
@@ -192,44 +167,16 @@ export function AddUserDialog() {
                 </Field>
               )}
             />
-            <Controller
-              name="role"
+            <AddUserRoleSelectField
               control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid ? '' : undefined}>
-                  <FieldLabel htmlFor="add-user-role">Role</FieldLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={(value: RoleValue | null) => {
-                      if (value != null) field.onChange(value);
-                    }}
-                    disabled={createUser.isPending}
-                  >
-                    <SelectTrigger
-                      id="add-user-role"
-                      aria-invalid={fieldState.invalid}
-                    >
-                      <SelectValue placeholder="Select role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        {roleOptions.map((role) => (
-                          <SelectItem key={role.value} value={role.value}>
-                            {role.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  {selectedRoleDescription && (
-                    <FieldDescription>{selectedRoleDescription}</FieldDescription>
-                  )}
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
+              disabled={createUser.isPending || assignableRolesQuery.isLoading || rolesUnavailable}
+              roles={assignableRoles}
             />
+            {assignableRolesQuery.isError && (
+              <p className="text-destructive text-sm" role="alert">
+                Unable to load assignable roles.
+              </p>
+            )}
             <Controller
               name="send_invite"
               control={form.control}
@@ -292,7 +239,7 @@ export function AddUserDialog() {
             <Button
               type="submit"
               form="add-user-form"
-              disabled={createUser.isPending}
+              disabled={createUser.isPending || assignableRolesQuery.isLoading || rolesUnavailable}
             >
               {createUser.isPending
                 ? sendInvite ? 'Sending…' : 'Creating…'
