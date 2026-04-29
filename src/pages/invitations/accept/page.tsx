@@ -55,7 +55,9 @@ export function AcceptInvitationPage() {
     event.preventDefault();
     if (!canSubmit) return;
     acceptInvitation.mutate(
-      { email, token, password, password_confirmation: confirmation },
+      {
+        email, token, password, password_confirmation: confirmation, 
+      },
       { onSuccess: () => navigate('/login', { replace: true }) }
     );
   }
@@ -69,108 +71,114 @@ export function AcceptInvitationPage() {
 
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold tracking-tight">You've been invited</h1>
-          {invitation.isLoading ? (
-            <Skeleton className="h-4 w-56" />
-          ) : invitation.isSuccess ? (
-            <p className="text-muted-foreground text-sm">
-              Welcome, {invitation.data.name}. Set a password for{' '}
-              <strong className="text-foreground">{invitation.data.email}</strong> to finish setup.
-            </p>
-          ) : null}
+          {invitation.isLoading
+            ? (
+              <Skeleton className="h-4 w-56" />
+            )
+            : invitation.isSuccess
+              ? (
+                <p className="text-muted-foreground text-sm">
+                  Welcome, {invitation.data.name}. Set a password for{' '}
+                  <strong className="text-foreground">{invitation.data.email}</strong> to finish setup.
+                </p>
+              )
+              : null}
         </div>
 
-        {isLinkInvalid ? (
-          <div className="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 space-y-0.5">
-            <p className="text-destructive text-sm font-medium">
-              This invite link is invalid or has expired.
-            </p>
-            <p className="text-destructive/80 text-sm">
-              Contact your admin to request a new invitation.
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {apiError && (
-              <p className="text-destructive text-sm" role="alert">
-                {apiError}
+        {isLinkInvalid
+          ? (
+            <div className="rounded-md border border-destructive/30 bg-destructive/10 px-4 py-3 space-y-0.5">
+              <p className="text-destructive text-sm font-medium">
+                This invite link is invalid or has expired.
               </p>
-            )}
-
-            <div className="space-y-2">
-              <label htmlFor="invite-password" className="text-sm font-medium">
-                Password
-              </label>
-              <div className="relative">
-                <Input
-                  id="invite-password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  placeholder="At least 8 characters"
-                  value={password}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
-                  disabled={!invitation.isSuccess || acceptInvitation.isPending}
-                  autoFocus={invitation.isSuccess}
-                  className="w-full pr-9"
-                />
-                <button
-                  type="button"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  tabIndex={-1}
-                >
-                  {showPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
-                </button>
-              </div>
-              {password.length > 0 && (
-                <div className="space-y-1">
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
-                    <div
-                      className={`h-full rounded-full transition-[width,background-color] duration-300 ${strength.color}`}
-                      style={{ width: `${strength.score}%` }}
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground">{strength.label}</p>
-                </div>
-              )}
+              <p className="text-destructive/80 text-sm">
+                Contact your admin to request a new invitation.
+              </p>
             </div>
-
-            <div className="space-y-2">
-              <label htmlFor="invite-password-confirmation" className="text-sm font-medium">
-                Confirm password
-              </label>
-              <div className="relative">
-                <Input
-                  id="invite-password-confirmation"
-                  type={showConfirmation ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  value={confirmation}
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => setConfirmation(event.target.value)}
-                  disabled={!invitation.isSuccess || acceptInvitation.isPending}
-                  className="w-full pr-9"
-                />
-                <button
-                  type="button"
-                  aria-label={showConfirmation ? 'Hide password' : 'Show password'}
-                  onClick={() => setShowConfirmation((v) => !v)}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  tabIndex={-1}
-                >
-                  {showConfirmation ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
-                </button>
-              </div>
-              {confirmError && (
+          )
+          : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {apiError && (
                 <p className="text-destructive text-sm" role="alert">
-                  {confirmError}
+                  {apiError}
                 </p>
               )}
-            </div>
 
-            <Button type="submit" className="w-full" disabled={!canSubmit}>
-              {acceptInvitation.isPending ? 'Setting up…' : 'Set password'}
-            </Button>
-          </form>
-        )}
+              <div className="space-y-2">
+                <label htmlFor="invite-password" className="text-sm font-medium">
+                  Password
+                </label>
+                <div className="relative">
+                  <Input
+                    id="invite-password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    placeholder="At least 8 characters"
+                    value={password}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
+                    disabled={!invitation.isSuccess || acceptInvitation.isPending}
+                    autoFocus={invitation.isSuccess}
+                    className="w-full pr-9"
+                  />
+                  <button
+                    type="button"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
+                  </button>
+                </div>
+                {password.length > 0 && (
+                  <div className="space-y-1">
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
+                      <div
+                        className={`h-full rounded-full transition-[width,background-color] duration-300 ${strength.color}`}
+                        style={{ width: `${strength.score}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">{strength.label}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="invite-password-confirmation" className="text-sm font-medium">
+                  Confirm password
+                </label>
+                <div className="relative">
+                  <Input
+                    id="invite-password-confirmation"
+                    type={showConfirmation ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    value={confirmation}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => setConfirmation(event.target.value)}
+                    disabled={!invitation.isSuccess || acceptInvitation.isPending}
+                    className="w-full pr-9"
+                  />
+                  <button
+                    type="button"
+                    aria-label={showConfirmation ? 'Hide password' : 'Show password'}
+                    onClick={() => setShowConfirmation((v) => !v)}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    tabIndex={-1}
+                  >
+                    {showConfirmation ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
+                  </button>
+                </div>
+                {confirmError && (
+                  <p className="text-destructive text-sm" role="alert">
+                    {confirmError}
+                  </p>
+                )}
+              </div>
+
+              <Button type="submit" className="w-full" disabled={!canSubmit}>
+                {acceptInvitation.isPending ? 'Setting up…' : 'Set password'}
+              </Button>
+            </form>
+          )}
 
         <p className="text-muted-foreground text-center text-sm">
           <Link to="/login" className="text-primary underline-offset-4 hover:underline">

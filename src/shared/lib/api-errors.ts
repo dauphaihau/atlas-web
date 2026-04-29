@@ -2,7 +2,7 @@ export type ApiError = {
   message?: string
   status?: number
   body?: { message?: string | string[]; error_code?: string }
-}
+};
 
 export function getErrorMessage(err: ApiError | undefined): string | null {
   if (!err) return null;
