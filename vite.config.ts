@@ -24,6 +24,6 @@ export default defineConfig({
       clientPort: 443,
       protocol: 'wss',
     },
-    allowedHosts: ['admin.atlas.local'],
+    allowedHosts: ['app.atlas.local'],
   },
 });
