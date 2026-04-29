@@ -34,7 +34,7 @@ import {
   addUserSchema,
   type AddUserFormValues
 } from './add-user-dialog-schema';
-import { AddUserRoleSelectField } from './AddUserRoleSelectField';
+import { AddUserRoleSelectField } from './add-user-role-select-field';
 
 type ApiError = { message?: string; body?: { message?: string | string[] } };
 

@@ -3,7 +3,7 @@ import {
 } from 'react-router-dom';
 import { TooltipProvider } from '@atlas/ui/tooltip';
 import { Toaster } from '@atlas/ui/sonner';
-import { DashboardLayout } from '@/widgets/DashboardLayout';
+import { DashboardLayout } from '@/widgets/dashboard-layout';
 import { ActivityLogsPage } from '@/pages/activity-logs/page';
 import { DashboardPage } from '@/pages/dashboard/page';
 import { LoginPage } from '@/pages/login/page';

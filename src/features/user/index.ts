@@ -1,7 +1,7 @@
-export { AddUserDialog } from './components/AddUserDialog';
-export { EditUserDialog } from './components/EditUserDialog';
-export { ExportUsersButton, ExportUsersError } from './components/ExportUsers';
-export { ImportProgressCard } from './components/ImportProgressCard';
-export { ImportUsersDialog } from './components/ImportUsersDialog';
-export { UsersPageHeader } from './components/UsersPageHeader';
-export { UsersTable } from './components/UsersTable';
+export { AddUserDialog } from './components/add-user-dialog';
+export { EditUserDialog } from './components/edit-user-dialog';
+export { ExportUsersButton, ExportUsersError } from './components/export-users';
+export { ImportProgressCard } from './components/import-progress-card';
+export { ImportUsersDialog } from './components/import-users-dialog';
+export { UsersPageHeader } from './components/users-page-header';
+export { UsersTable } from './components/users-table';

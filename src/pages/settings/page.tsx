@@ -1,4 +1,4 @@
-import { UpdateProfileForm } from '@/features/user/components/UpdateProfileForm';
+import { UpdateProfileForm } from '@/features/user/components/update-profile-form';
 
 export function SettingsPage() {
   return (

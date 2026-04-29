@@ -28,8 +28,8 @@ import { isEchoConfigured } from '@/shared/lib/echo';
 import logger from '@/shared/lib/logger';
 import { useImportProgressStore } from '@/shared/store/import-progress.store';
 import { DownloadIcon, FileUpIcon } from 'lucide-react';
-import { ImportFileDropZone } from './ImportFileDropZone';
-import { ImportFileCard } from './ImportFileCard';
+import { ImportFileDropZone } from './import-file-drop-zone';
+import { ImportFileCard } from './import-file-card';
 
 const log = logger('import-users-dialog');
 

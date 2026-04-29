@@ -7,7 +7,7 @@ import {
   useForceDeleteUserMutation,
   useUserStatsQuery
 } from '@/shared/queries/user';
-import { EditUserDialog } from '../EditUserDialog';
+import { EditUserDialog } from '../edit-user-dialog';
 import { useDebouncedValue } from '@/shared/hooks/use-debounced-value';
 import type { UserDto } from '@/shared/api/user';
 import { Skeleton } from '@atlas/ui/skeleton';
@@ -29,12 +29,12 @@ import { Button } from '@atlas/ui/button';
 import {
   MoreVerticalIcon, PencilIcon, Trash2Icon, RotateCcwIcon 
 } from 'lucide-react';
-import { AvatarCell } from './AvatarCell';
-import { TablePagination, PER_PAGE_OPTIONS } from './TablePagination';
-import { UsersFilterBar } from './UsersFilterBar';
-import { DeleteUserDialog } from './DeleteUserDialog';
-import { ForceDeleteUserDialog } from './ForceDeleteUserDialog';
-import type { UsersTab } from './UsersFilterBar';
+import { AvatarCell } from './avatar-cell';
+import { TablePagination, PER_PAGE_OPTIONS } from './table-pagination';
+import { UsersFilterBar } from './users-filter-bar';
+import { DeleteUserDialog } from './delete-user-dialog';
+import { ForceDeleteUserDialog } from './force-delete-user-dialog';
+import type { UsersTab } from './users-filter-bar';
 
 const SEARCH_DEBOUNCE_MS = 300;
 

@@ -1,4 +1,4 @@
-export { TenantsPageHeader } from './components/TenantsPageHeader';
-export { AddTenantDialog } from './components/AddTenantDialog';
-export { EditTenantDialog } from './components/EditTenantDialog';
-export { TenantsTable } from './components/TenantsTable';
+export { TenantsPageHeader } from './components/tenants-page-header';
+export { AddTenantDialog } from './components/add-tenant-dialog';
+export { EditTenantDialog } from './components/edit-tenant-dialog';
+export { TenantsTable } from './components/tenants-table';

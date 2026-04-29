@@ -42,8 +42,25 @@ const atlasRules = {
   },
 };
 
+const dauphaihauConfigs = await dauphaihauConfig();
+const checkFilePlugin = dauphaihauConfigs.find((config) => config.plugins?.['check-file'])
+  ?.plugins['check-file'];
+
 export default defineConfig([
-  ...(await dauphaihauConfig()),
+  ...dauphaihauConfigs,
+  {
+    files: ['**/*.{jsx,tsx}'],
+    plugins: {
+      'check-file': checkFilePlugin,
+    },
+    rules: {
+      'check-file/filename-naming-convention': [
+        'error',
+        { '**/*': 'KEBAB_CASE' },
+        { ignoreMiddleExtensions: true },
+      ],
+    },
+  },
   {
     files: [
       '**/main.tsx',

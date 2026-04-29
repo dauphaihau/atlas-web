@@ -1,6 +1,6 @@
-import { ExportUsersButton } from './ExportUsers';
-import { AddUserDialog } from './AddUserDialog';
-import { ImportUsersDialog } from './ImportUsersDialog';
+import { ExportUsersButton } from './export-users';
+import { AddUserDialog } from './add-user-dialog';
+import { ImportUsersDialog } from './import-users-dialog';
 
 export function UsersPageHeader() {
   return (

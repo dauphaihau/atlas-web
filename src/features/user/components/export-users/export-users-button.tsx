@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@atlas/ui/button';
 import { DownloadIcon } from 'lucide-react';
-import { ExportUsersDialog } from './ExportUsersDialog';
+import { ExportUsersDialog } from './export-users-dialog';
 
 export function ExportUsersButton() {
   const [open, setOpen] = useState(false);

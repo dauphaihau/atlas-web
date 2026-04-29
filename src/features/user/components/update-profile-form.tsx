@@ -99,13 +99,15 @@ export function UpdateProfileForm() {
       className="flex max-w-sm flex-col gap-4"
     >
       {updateError != null && updateError !== '' && (
-        isConflict ? (
-          <ConflictCallout subject="profile" onReload={handleReload} />
-        ) : (
-          <p className="text-destructive text-sm" role="alert">
-            {updateError}
-          </p>
-        )
+        isConflict
+          ? (
+            <ConflictCallout subject="profile" onReload={handleReload} />
+          )
+          : (
+            <p className="text-destructive text-sm" role="alert">
+              {updateError}
+            </p>
+          )
       )}
       {updateProfile.isSuccess && (
         <p className="text-sm text-green-600" role="status">

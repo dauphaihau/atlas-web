@@ -38,7 +38,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@atlas/ui/alert-dialog';
-import { EditTenantDialog } from './EditTenantDialog';
+import { EditTenantDialog } from './edit-tenant-dialog';
 
 const DEFAULT_PER_PAGE = 15;
 const PER_PAGE_OPTIONS = [10, 15, 25, 50] as const;

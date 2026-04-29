@@ -23,9 +23,9 @@ import {
   LogoutIcon,
   SettingsIcon,
   SquareActivityIcon,
-  UsersIcon,
+  UsersIcon
 } from 'lucide-animated';
-import { AuthGuard } from '@/widgets/AuthGuard';
+import { AuthGuard } from '@/widgets/auth-guard';
 import { useImportProgressStore } from '@/shared/store/import-progress.store';
 import { useMeQuery } from '@/shared/queries/auth';
 import { useLogoutMutation } from '@/shared/queries/auth';
@@ -35,7 +35,9 @@ interface AnimatedIconHandle {
   stopAnimation: () => void;
 }
 
-function NavItem({ to, label, icon: Icon, isActive }: {
+function NavItem({
+  to, label, icon: Icon, isActive, 
+}: {
   to: string;
   label: string;
   icon: typeof SettingsIcon;
@@ -103,7 +105,9 @@ export function DashboardLayout() {
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-2">
-                  {navItems.map(({ to, label, icon, adminOnly, superAdminOnly }) => {
+                  {navItems.map(({
+                    to, label, icon, adminOnly, superAdminOnly, 
+                  }) => {
                     if (adminOnly && !me?.roles?.includes('admin')) return null;
                     if (superAdminOnly && !me?.roles?.includes('super_admin')) return null;
                     return (

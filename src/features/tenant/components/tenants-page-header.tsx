@@ -1,4 +1,4 @@
-import { AddTenantDialog } from './AddTenantDialog';
+import { AddTenantDialog } from './add-tenant-dialog';
 
 export function TenantsPageHeader() {
   return (

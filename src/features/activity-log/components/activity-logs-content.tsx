@@ -1,7 +1,7 @@
 import { useMeQuery } from '@/shared/queries/auth';
-import { ActivityLogsPageHeader } from './ActivityLogsPageHeader';
-import { ActivityLogsPermissionDenied } from './ActivityLogsPermissionDenied';
-import { ActivityLogsTable } from './ActivityLogsTable';
+import { ActivityLogsPageHeader } from './activity-logs-page-header';
+import { ActivityLogsPermissionDenied } from './activity-logs-permission-denied';
+import { ActivityLogsTable } from './activity-logs-table';
 
 export function ActivityLogsContent() {
   const { data: me } = useMeQuery();
