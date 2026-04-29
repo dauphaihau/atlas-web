@@ -33,9 +33,9 @@ import { ImportFileCard } from './ImportFileCard';
 
 const log = logger('import-users-dialog');
 
-const ACCEPTED_TYPES = '.csv,.txt,.xlsx,.xls';
-const ACCEPTED_LABEL = 'CSV, XLSX or XLS files.';
-const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+const ACCEPTED_TYPES = '.csv,.txt';
+const ACCEPTED_LABEL = 'CSV or TXT files.';
+const MAX_SIZE_BYTES = 64 * 1024 * 1024; // 64MB
 
 const FILE_INPUT_ID = 'import-file';
 const LABEL_ID = 'import-file-label';

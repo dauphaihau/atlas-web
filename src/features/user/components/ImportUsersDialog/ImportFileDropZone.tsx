@@ -104,14 +104,14 @@ export function ImportFileDropZone({
         aria-describedby={`${hintId} ${constraintsId}`}
       />
       <div id={hintId} className="sr-only">
-        Accepted file types: {acceptedLabel} Max. size: 10MB.
+        Accepted file types: {acceptedLabel} Max. size: 64MB.
       </div>
       <FieldDescription
         id={constraintsId}
         className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-xs"
       >
         <span>Accepted file types: {acceptedLabel}</span>
-        <span>Max. size: 10MB</span>
+        <span>Max. size: 64MB</span>
       </FieldDescription>
     </Field>
   );
