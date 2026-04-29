@@ -1,5 +1,6 @@
+import { useRef } from 'react';
 import {
-  Link, Outlet, useLocation, useNavigate 
+  Link, Outlet, useLocation, useNavigate
 } from 'react-router-dom';
 import {
   Sidebar,
@@ -17,32 +18,65 @@ import {
 import { Button } from '@atlas/ui/button';
 import { ImportProgressCard } from '@/features/user';
 import {
-  Building2Icon,
-  LayoutDashboardIcon,
-  ListChecksIcon,
-  LogOutIcon,
+  BlocksIcon,
+  LayoutPanelTopIcon,
+  LogoutIcon,
   SettingsIcon,
-  UsersIcon
-} from 'lucide-react';
+  SquareActivityIcon,
+  UsersIcon,
+} from 'lucide-animated';
 import { AuthGuard } from '@/widgets/AuthGuard';
 import { useImportProgressStore } from '@/shared/store/import-progress.store';
 import { useMeQuery } from '@/shared/queries/auth';
 import { useLogoutMutation } from '@/shared/queries/auth';
 
+interface AnimatedIconHandle {
+  startAnimation: () => void;
+  stopAnimation: () => void;
+}
+
+function NavItem({ to, label, icon: Icon, isActive }: {
+  to: string;
+  label: string;
+  icon: typeof SettingsIcon;
+  isActive: boolean;
+}) {
+  const iconRef = useRef<AnimatedIconHandle>(null);
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        render={(props) => (
+          <Link
+            to={to}
+            {...props}
+            onMouseEnter={() => iconRef.current?.startAnimation()}
+            onMouseLeave={() => iconRef.current?.stopAnimation()}
+          >
+            <Icon ref={iconRef} />
+            <span>{label}</span>
+          </Link>
+        )}
+        isActive={isActive}
+        className="transition-colors duration-150"
+      />
+    </SidebarMenuItem>
+  );
+}
+
 const navItems: Array<{
   to: string
   label: string
-  icon: typeof LayoutDashboardIcon
+  icon: typeof SettingsIcon
   adminOnly?: boolean
   superAdminOnly?: boolean
 }> = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboardIcon },
+  { to: '/', label: 'Dashboard', icon: LayoutPanelTopIcon },
   { to: '/users', label: 'Users', icon: UsersIcon },
   {
-    to: '/tenants', label: 'Tenants', icon: Building2Icon, superAdminOnly: true, 
+    to: '/tenants', label: 'Tenants', icon: BlocksIcon, superAdminOnly: true,
   },
   {
-    to: '/activity-logs', label: 'Activity Logs', icon: ListChecksIcon, adminOnly: true, 
+    to: '/activity-logs', label: 'Activity Logs', icon: SquareActivityIcon, adminOnly: true,
   },
   { to: '/settings', label: 'Settings', icon: SettingsIcon },
 ];
@@ -69,24 +103,17 @@ export function DashboardLayout() {
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-2">
-                  {navItems.map(({
-                    to, label, icon, adminOnly, superAdminOnly,
-                  }) => {
+                  {navItems.map(({ to, label, icon, adminOnly, superAdminOnly }) => {
                     if (adminOnly && !me?.roles?.includes('admin')) return null;
                     if (superAdminOnly && !me?.roles?.includes('super_admin')) return null;
-                    const Icon = icon;
                     return (
-                      <SidebarMenuItem key={to}>
-                        <SidebarMenuButton
-                          render={(props) => (
-                            <Link to={to} {...props}>
-                              <Icon />
-                              <span>{label}</span>
-                            </Link>
-                          )}
-                          isActive={location.pathname === to}
-                        />
-                      </SidebarMenuItem>
+                      <NavItem
+                        key={to}
+                        to={to}
+                        label={label}
+                        icon={icon}
+                        isActive={location.pathname === to}
+                      />
                     );
                   })}
                 </SidebarMenu>
@@ -116,7 +143,7 @@ export function DashboardLayout() {
                 onClick={() => logout.mutate(undefined, { onSuccess: () => navigate('/login', { replace: true }) })}
                 disabled={logout.isPending}
               >
-                <LogOutIcon className="size-4" />
+                <LogoutIcon className="size-4" />
                 <span className="sr-only">Log out</span>
               </Button>
             </div>
