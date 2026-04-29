@@ -6,7 +6,9 @@ export type { UserDto };
 export interface CreateUserRequestDto {
   name: string
   email: string
-  password: string
+  password?: string
+  role?: string
+  send_invite?: boolean
 }
 
 /** PATCH /v1/users/:id request body (admin update user). */

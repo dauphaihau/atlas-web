@@ -2,6 +2,7 @@ import {
   BrowserRouter, Route, Routes, Navigate 
 } from 'react-router-dom';
 import { TooltipProvider } from '@atlas/ui/tooltip';
+import { Toaster } from '@atlas/ui/sonner';
 import { DashboardLayout } from '@/widgets/DashboardLayout';
 import { ActivityLogsPage } from '@/pages/activity-logs/page';
 import { DashboardPage } from '@/pages/dashboard/page';
@@ -29,6 +30,7 @@ function App() {
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <Toaster position="top-right" richColors />
       </TooltipProvider>
     </BrowserRouter>
   );
